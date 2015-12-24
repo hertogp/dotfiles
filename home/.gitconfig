@@ -6,3 +6,5 @@
 	ui = auto
 [alias]
 	ls = log --oneline
+[push]
+	default = simple
