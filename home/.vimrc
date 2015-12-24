@@ -144,7 +144,7 @@ Plugin 'https://github.com/scwood/vim-hybrid.git'  "Another dark colorscheme
 " Scratch Stuff: {{{2
 " Plugin 'file:///home/pdh/dev/vim/mm_vim'     " home-grown mongrels here
 Plugin 'https://github.com/powerman/vim-plugin-viewdoc.git'
-Plugin 'file:///home/pdh/dev/vim/dialk'
+Plugin 'https://github.com/hertogp/dialk'
 call vundle#end()                              "vundle#end
 
 filetype plugin indent on
