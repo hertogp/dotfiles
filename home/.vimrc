@@ -277,13 +277,10 @@ au FileType vim set sts=2 sw=2 tabstop=2
 python <<EOF
 import sys
 import os
-DOTVIMRC = os.path.expanduser('~/.vimrc')
-if os.path.islink(DOTVIMRC):
-    # ~/.vimrc -> <DOTVIMDIR>/dotvimrc
-    DOTVIMDIR = os.path.dirname(os.path.realpath(DOTVIMRC))
-else:
-    # ~/.vimrc is a file
-    DOTVIMDIR = os.path.expanduser('~/.vim')
+DOTVIMDIR = os.path.expanduser('~/.vim')
+if os.path.islink(DOTVIMDIR):
+    # ~/.vim -> <some-path-to-a-vimdir>
+    DOTVIMDIR = os.path.dirname(os.path.realpath(DOTVIMDIR))
 l = [p for p,n,f in os.walk(os.path.join(DOTVIMDIR,'pylib'))]
 sys.path.extend(l)
 del os
