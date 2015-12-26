@@ -305,8 +305,8 @@ nnoremap H :<c-u>tabp<cr>
 nnoremap L :<c-u>tabn<cr>
 " u undo, U redo
 nnoremap U <c-r>
-nnoremap <leader>ev :edit $HOME/.vim/.vimrc<cr>
-nnoremap <leader>sv :source $HOME/.vim/.vimrc<cr>
+nnoremap <leader>ev :edit $HOME/.vimrc<cr>
+nnoremap <leader>sv :source $HOME/.vimrc<cr>
 nnoremap <leader>ed :edit /home/www/dwark/tasks/dwark.txt<cr>
 nnoremap <leader>ew :edit /home/www/work/tasks/work.txt<cr>
 " escape to normal mode
@@ -351,11 +351,11 @@ au FileType voomtree nmap <silent><buffer>K <up>
 nnoremap <c-n> :nohl<CR>
 
 " Ctl-jhklp move up/left/down/right/previous window
-map <c-j> <c-w>j
-map <c-k> <c-w>k
-map <c-l> <c-w>l
-map <c-h> <c-w>h
-map <c-p> <c-w>p
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-l> <c-w>l
+nnoremap <c-h> <c-w>h
+nnoremap <c-p> <c-w>p
 
 " <c-s> to write buffer if it's been modified (ie :update instead of :write)
 " Requires the terminal to give up its claim on <c-s> via stty -ixon
