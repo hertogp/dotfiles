@@ -1,0 +1,10 @@
+[user]
+	email = git.hertogp@github.com
+	name = hertogp
+	account = hertogp
+[color]
+	ui = auto
+[alias]
+	ls = log --oneline
+[push]
+	default = simple
