@@ -89,12 +89,15 @@ chpwd_functions+=(_update_ruby_version)
 function current_pwd {
   echo $(pwd | sed -e "s,^$HOME,~,")
 }
-function cur_git_root {
-  echo ${$(git rev-parse --show-toplevel)/*\/}
+function git_root {
+  local GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+  if [[ -n $GIT_ROOT ]]; then
+      echo $(basename $GIT_ROOT)
+  fi
 }
 
 PROMPT='
-${PR_GREEN}%n%{$reset_color%}${PR_YELLOW}@%{$reset_color%}${PR_GREEN}$(box_name)%{$reset_color%}%{$FG[239]%}:%{$reset_color%} ${PR_BOLD_YELLOW}$(cur_git_root)%{$reset_color%}$(git_prompt_string)$(prompt_char) '
+${PR_GREEN}%n%{$reset_color%}${PR_YELLOW}@%{$reset_color%}${PR_GREEN}$(box_name)%{$reset_color%}%{$FG[239]%}:%{$reset_color%} ${PR_BOLD_YELLOW}$(git_root)%{$reset_color%}$(git_prompt_string)$(prompt_char) '
 
 # ${PR_GREEN}%n%{$reset_color%}%{$FG[239]%}@%{$reset_color%}${PR_GREEN}$(box_name)%{$reset_color%}%{$FG[239]%}:%{$reset_color%}${PR_BOLD_YELLOW}$(current_pwd)%{$reset_color%}$(git_prompt_string)
 export SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color [(y)es (n)o (a)bort (e)dit]? "
