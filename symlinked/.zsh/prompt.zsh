@@ -3,7 +3,7 @@ function virtualenv_info {
 }
 
 function prompt_char {
-    git branch >/dev/null 2>/dev/null && echo '±' && return
+    git branch >/dev/null 2>/dev/null && echo '★' && return
     hg root >/dev/null 2>/dev/null && echo '☿' && return
     echo '○'
 }
@@ -21,13 +21,13 @@ autoload -U colors && colors # Enable colors in prompt
 
 # Modify the colors and symbols in these variables as desired.
 GIT_PROMPT_SYMBOL="%{$fg[blue]%}±"
-GIT_PROMPT_PREFIX="%{$fg[green]%} [%{$reset_color%}"
+GIT_PROMPT_PREFIX="%{$fg[green]%}[%{$reset_color%}"
 GIT_PROMPT_SUFFIX="%{$fg[green]%}]%{$reset_color%}"
 GIT_PROMPT_AHEAD="%{$fg[red]%}ANUM%{$reset_color%}"
 GIT_PROMPT_BEHIND="%{$fg[cyan]%}BNUM%{$reset_color%}"
 GIT_PROMPT_MERGING="%{$fg_bold[magenta]%}⚡︎%{$reset_color%}"
 GIT_PROMPT_UNTRACKED="%{$fg_bold[red]%}u%{$reset_color%}"
-GIT_PROMPT_MODIFIED="%{$fg_bold[yellow]%}d%{$reset_color%}"
+GIT_PROMPT_MODIFIED="%{$fg_bold[yellow]%}m%{$reset_color%}"
 GIT_PROMPT_STAGED="%{$fg_bold[green]%}s%{$reset_color%}"
  
 # Show Git branch/tag, or name-rev if on detached head
@@ -78,7 +78,7 @@ function parse_git_state() {
 # If inside a Git repository, print its branch and state
 function git_prompt_string() {
   local git_where="$(parse_git_branch)"
-  [ -n "$git_where" ] && echo "on %{$fg[blue]%}${git_where#(refs/heads/|tags/)}$(parse_git_state)"
+  [ -n "$git_where" ] && echo " %{$fg[blue]%}(${git_where#(refs/heads/|tags/)})$(parse_git_state)"
 }
 
 # determine Ruby version whether using RVM or rbenv
@@ -100,7 +100,7 @@ function current_pwd {
 }
 
 PROMPT='
-${PR_GREEN}%n%{$reset_color%} %{$FG[239]%}at%{$reset_color%} ${PR_BOLD_BLUE}$(box_name)%{$reset_color%} %{$FG[239]%}in%{$reset_color%} ${PR_BOLD_YELLOW}$(current_pwd)%{$reset_color%} $(git_prompt_string)
+${PR_GREEN}%n%{$reset_color%}%{$FG[239]%}@%{$reset_color%}${PR_BOLD_BLUE}$(box_name)%{$reset_color%}%{$FG[239]%}:%{$reset_color%}${PR_BOLD_YELLOW}$(current_pwd)%{$reset_color%}$(git_prompt_string)
 $(prompt_char) '
 
 export SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color [(y)es (n)o (a)bort (e)dit]? "
