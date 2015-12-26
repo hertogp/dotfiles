@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-# Thanks to https://github.com/Gee-Bee/dotfiles.git
+# Adapted from https://github.com/Gee-Bee/dotfiles.git
 
 require 'fileutils'
 require 'pathname'
@@ -21,4 +21,4 @@ def linkify source_path, target_path
   end
 end
 
-linkify File.join( File.expand_path(File.dirname(__FILE__)), 'home' ), ENV['HOME']
+linkify File.join( File.expand_path(File.dirname(__FILE__)), 'symlinked' ), ENV['HOME']
