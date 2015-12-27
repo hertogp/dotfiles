@@ -31,6 +31,16 @@ function parse_git_branch() { #{{{2
   (git symbolic-ref -q HEAD || git name-rev --name-only --no-undefined --always HEAD) 2> /dev/null
 }
 
+# Modify the colors and symbols in these variables as desired.
+GIT_PROMPT_SYMBOL="%{$fg[blue]%}★%{$reset_color%}"
+GIT_PROMPT_PREFIX="%{$fg[green]%}[%{$reset_color%}"
+GIT_PROMPT_SUFFIX="%{$fg[green]%}]%{$reset_color%}"
+GIT_PROMPT_AHEAD="%{$fg[red]%}+NUM%{$reset_color%}"
+GIT_PROMPT_BEHIND="%{$fg[cyan]%}-NUM%{$reset_color%}"
+GIT_PROMPT_MERGING="%{$fg_bold[magenta]%}⚡︎%{$reset_color%}"
+GIT_PROMPT_UNTRACKED="%{$fg_bold[red]%}u%{$reset_color%}"
+GIT_PROMPT_MODIFIED="%{$fg_bold[yellow]%}m%{$reset_color%}"
+GIT_PROMPT_STAGED="%{$fg_bold[green]%}s%{$reset_color%}"
 function parse_git_state() { #{{{2
   # show symbols depending on Git-repo state
   # Compose this value via multiple conditional appends.
@@ -61,17 +71,17 @@ function parse_git_state() { #{{{2
   fi
 }
 
-function get_git_state() { #{{{2
-  local GIT_STATE_CLEAN="${PR_GREEN}✓%{$reset_color%}"
-  local GIT_STATE_DIRTY="${PR_RED}✗%{$reset_color%}"
+function get_git_prompt() { #{{{2
+  local GIT_CLEAN=" ${PR_GREEN}✓%{$reset_color%}"
+  local GIT_DIRTY=" ${PR_RED}✗%{$reset_color%}"
   if [[ -n $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
-    echo $GIT_STATE_DIRTY
+    echo $GIT_DIRTY
   elif ! git diff --quiet 2> /dev/null; then
-    echo $GIT_STATE_DIRTY
+    echo $GIT_DIRTY
   elif ! git diff --cached --quiet 2> /dev/null; then
-    echo "$GIT_STATE_DIRTY"
+    echo "$GIT_DIRTY"
   else
-    echo "$GIT_STATE_CLEAN"
+    echo "$GIT_CLEAN"
   fi
 }
 function get_git_branch() { #{{{2
@@ -92,10 +102,16 @@ function get_git_branch() { #{{{2
         if [ "$NUM_BEHIND" -gt 0 ]; then
            BRANCH="$BRANCH -$NUM_BEHIND"
         fi
-    fi
-    echo "%{$fg[red]%}(${BRANCH})%{$reset_color%}"
+      fi
   fi
+   local STATUS=$(parse_git_state)
+   if [ -z "$STATUS" ]; then
+       echo " %{$fg[green]%}(${BRANCH})%{$reset_color%}"
+   else
+       echo " %{$fg[red]%}(${BRANCH} ${STATUS}%{$fg[red]%})%{$reset_color%}"
+   fi
 }
+
 function git_prompt_string() { #{{{2
   # If inside a Git repository, print its branch and state
   local git_where="$(parse_git_branch)"
@@ -106,11 +122,14 @@ function git_prompt_string() { #{{{2
 function current_pwd { #{{{2
   echo $(pwd | sed -e "s,^$HOME,~,")
 }
-function git_root { #{{{2
+function get_git_root { #{{{2
   local GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
   if [[ -n $GIT_ROOT ]]; then
-      echo " $(basename $GIT_ROOT)"
+      echo "%{$fg_bold[yellow]%}$(basename $GIT_ROOT)%{$reset_color%}"
   fi
+}
+function get_usr_host() { #{{{2
+  echo "%{$fg[green]%}%n%{$reset_color%}@%{$fg[green]%}%m%{$reset_color%}"
 }
 
 # PROMPT(s) {{{1
@@ -122,16 +141,6 @@ function git_root { #{{{2
 autoload -U colors && colors # Enable colors in prompt
 
 # colors {{{2
-# Modify the colors and symbols in these variables as desired.
-GIT_PROMPT_SYMBOL="%{$fg[blue]%}★%{$reset_color%}"
-GIT_PROMPT_PREFIX="%{$fg[green]%}[%{$reset_color%}"
-GIT_PROMPT_SUFFIX="%{$fg[green]%}]%{$reset_color%}"
-GIT_PROMPT_AHEAD="%{$fg[red]%}+NUM%{$reset_color%}"
-GIT_PROMPT_BEHIND="%{$fg[cyan]%}-NUM%{$reset_color%}"
-GIT_PROMPT_MERGING="%{$fg_bold[magenta]%}⚡︎%{$reset_color%}"
-GIT_PROMPT_UNTRACKED="%{$fg_bold[red]%}u%{$reset_color%}"
-GIT_PROMPT_MODIFIED="%{$fg_bold[yellow]%}m%{$reset_color%}"
-GIT_PROMPT_STAGED="%{$fg_bold[green]%}s%{$reset_color%}"
 
 # ${PR_USR}@${PR_BOX}: $(git_root)$(git_status)
 
@@ -139,7 +148,7 @@ PROMPT='
 ${PR_GREEN}%n%{$reset_color%}${PR_YELLOW}@%{$reset_color%}${PR_GREEN}$(box_name)%{$reset_color%}%{$FG[239]%}:%{$reset_color%}${PR_BOLD_YELLOW}$(git_root)%{$reset_color%}$(git_prompt_string)$(prompt_char) '
 
 PROMPT='
-%{$fg[green]%}%n@%h%{$reset_color%}:$(get_git_branch)$(get_git_state)'
+$(get_usr_host): $(get_git_root)$(get_git_branch)$(get_git_prompt) '
 
 export SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color [(y)es (n)o (a)bort (e)dit]? "
 
