@@ -70,7 +70,7 @@ function get_git_status() { #{{{2
     GIT_STATE="${GIT_STATE}%{$fg[green]%}s%{$reset_color%}"
   fi
   if [ -z "$GIT_STATE" ]; then
-     echo " %{$fg[green]%}(${BRANCH})%{$reset_color%}${GIT_CLEAN} "
+     echo " %{$fg[yellow]%}(${BRANCH})%{$reset_color%}${GIT_CLEAN} "
   else
      echo " %{$fg[red]%}(${BRANCH} ${GIT_STATE}%{$fg[red]%})%{$reset_color%}${GIT_DIRTY} "
   fi
