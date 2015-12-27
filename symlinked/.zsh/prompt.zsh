@@ -32,8 +32,8 @@ function get_usr_host() { #{{{2
 function get_git_status() { #{{{2
   # If inside a Git repository, get (branch +status flags)
   # Show Git branch/tag, or name-rev if on detached head
-  local GIT_CLEAN=" ${PR_GREEN}✓%{$reset_color%}"
-  local GIT_DIRTY=" ${PR_RED}✗%{$reset_color%}"
+  local GIT_CLEAN=" ${PR_BOLD_YELLOW}✓%{$reset_color%}"
+  local GIT_DIRTY=" ${PR_BOLD_RED}✗%{$reset_color%}"
   local BRANCH=$(git symbolic-ref -q HEAD 2> /dev/null)
   if [[ -z "$BRANCH" ]]; then
       BRANCH=$(git name-rev --name-only --no-undefined --always HEAD 2> /dev/null)
@@ -78,7 +78,7 @@ function get_git_status() { #{{{2
 function get_git_info() { #{{{2
   local GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
   if [[ -n $GIT_ROOT ]]; then
-      GIT_ROOT="%{$fg_bold[magenta]%}$(basename $GIT_ROOT)%{$reset_color%}"
+      GIT_ROOT="%{$fg_bold[yellow]%}$(basename $GIT_ROOT)%{$reset_color%}"
       local GIT_STATUS="$(get_git_status)"
       echo "${GIT_ROOT}${GIT_STATUS}"
  fi
