@@ -448,9 +448,9 @@ autocmd VimEnter * imap <expr> <S-Tab> pumvisible() ? "<C-P>" : "<s-tab>"
 " Sontek: in select mode, c-j triggers snippet expansion
 
 " NeoSnippets:
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
+imap <C-j>     <Plug>(neosnippet_expand_or_jump)
+smap <C-j>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-j>     <Plug>(neosnippet_expand_target)
 
 " SuperTab like snippets behavior.
 "imap <expr><TAB>
