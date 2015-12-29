@@ -8,9 +8,17 @@
 function _update_ruby_version() { #{{{2
   # Get active ruby version using rbenv or rvm
   typeset -g ruby_version=''
-  which rbenv 1>/dev/null 2>/dev/null && ruby_version=${${(A)="$(rbenv version)"}[1]:l} && return
-  which rvm 1>/dev/null 2>/dev/null && ruby_version="$(rvm i v g)" && return
-  ruby_version="<?>"
+  #which rbenv 1>/dev/null 2>/dev/null && ruby_version=${${(A)="$(rbenv version)"}[1]:l} && return
+  #which rvm 1>/dev/null 2>/dev/null && ruby_version="$(rvm i v g)" && return
+  #ruby_version="<?>"
+  if rbenv 1>/dev/null 2>/dev/null; then
+      ruby_version=${${(A)="$(rbenv version)"}[1]:l}
+  elif rvm 1>/dev/null 2>/dev/null; then
+      ruby_version="$(rvm i v g)"
+  else
+      ruby_version="?"
+  fi
+  [ -n $ruby_version ] && ruby_version="%{$fg[red]%}[$ruby_version]%{$reset_color%}"
 }
 
 # Only update global ruby_version when changing directories
@@ -60,7 +68,7 @@ function addon_gitty(){  #{{{2
 
   local msg=""
   msg="%{$fg_bold[yellow]%}$(basename $GIT_ROOT)%{$reset_color%}"
-  msg+=" %{$fg[red]%}(${field[branch]}%)%{$reset_color%}$state"
+  msg+=" %{$fg[red]%}(${field[branch]}%)%{$reset_color%}$state" 
   [[ -z $state ]] && msg="$msg %{$fg_bold[yellow]%}✓ %{$reset_color%}"
   [[ -n $state ]] && msg="$msg %{$fg_bold[red]%}✗ %{$reset_color%}"
   echo "$msg← "
@@ -80,4 +88,4 @@ PROMPT='
 export SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color [(y)es (n)o (a)bort (e)dit]? "
 
 # right-prompt {{{2
-RPROMPT='%{$fg[red]%}[${ruby_version}]%{$reset_color%}'
+RPROMPT='${ruby_version}'
