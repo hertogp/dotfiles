@@ -56,10 +56,11 @@ function addon_gitty(){  #{{{2
   ${field[untracked]} && state="${state}%{$fg_bold[magenta]%}●%{$reset_color%}"
   ${field[ignored]}   && state="${state}%{$fg_bold[cyan]%}●%{$reset_color%}"
   ${field[conflict]}  && state="${state}%{$fg_bold[red]%}⚡︎%{$reset_color%}"
+  [[ -n $state ]]     && state="%{$fg[red][%{$reset_color%}$state%{$fg[red]%}]%{$reset_color%}"
 
   local msg=""
   msg="%{$fg_bold[yellow]%}$(basename $GIT_ROOT)%{$reset_color%}"
-  msg+=" %{$fg[red]%}(${field[branch]}%)[$state%{$fg[red]%}]%{$reset_color%}"
+  msg+=" %{$fg[red]%}(${field[branch]}%)%{$reset_color%}$state"
   [[ -z $state ]] && msg="$msg %{$fg_bold[yellow]%}✓ %{$reset_color%}"
   [[ -n $state ]] && msg="$msg %{$fg_bold[red]%}✗ %{$reset_color%}"
   echo "$msg← "
