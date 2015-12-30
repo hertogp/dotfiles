@@ -38,7 +38,12 @@ function addon_gitty(){  #{{{2
       # See git status --help for explanation of the fields
       case ${line[0,2]} in
           ('##')
-              field[branch]=${line[4,-1]/[ .]*}
+              # field[branch]=${line[4,-1]/[ .]*}  # just 1st word
+              # field[branch]=${(L)${line:3/[ .]*}
+              field[branch]=${(L)${${line:3}/.*}/* }
+              lag=${(L)line[(R)\[,(R)\]]}
+              [[ -n $lag ]] && $field[lag]=${${${lag:1:1}/a/+}/b/-}${lag//[^0-9]}
+
               [ ! ${line:l} = ${${line:l}#*ahead} ] && field[ahead]=${${${line:l}#*ahead}//[^[:digit:]]/}
               [ ! ${line:l} = ${${line:l}#*behind} ] && field[behind]=${${${line:l}#*behind}//[^[:digit:]]/}
               ;;
@@ -59,6 +64,7 @@ function addon_gitty(){  #{{{2
   local state=""
   [[ -n ${field[ahead]} ]]  && state="$state%{$fg[cyan]%}+${field[ahead]}"
   [[ -n ${field[behind]} ]] && state="$state%{$fg[cyan]%}-${field[behind]}"
+  [[ -n $field[lag] ]] && state="$tate%{$fg[cyns]%}$field[lag]"
   ${field[modified]}  && state="${state}%{$fg_bold[red]%}●%{$reset_color%}"
   ${field[staged]}    && state="${state}%{$fg_bold[green]%}●%{$reset_color%}"
   ${field[untracked]} && state="${state}%{$fg_bold[magenta]%}●%{$reset_color%}"
