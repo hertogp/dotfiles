@@ -30,29 +30,21 @@ function addon_gitty(){  #{{{2
   [[ -z $GIT_ROOT ]] && return
 
   typeset -A field
-  field=(branch '' ahead '' behind '')
+  field=(branch '' lag '')
   field+=(untracked false ignored false staged false modified false conflict false)
   for line in ${(f)"$(git status -bsu --porcelain 2>/dev/null)"}; do
-  #for line in ${(f)"$(< tst.log)"}; do
-      # [ ! ${line[1]} = ';' ] && echo "line  : >${line}<"
       # See git status --help for explanation of the fields
       case ${line[0,2]} in
           ('##')
-              # field[branch]=${line[4,-1]/[ .]*}  # just 1st word
-              # field[branch]=${(L)${line:3/[ .]*}
               field[branch]=${(L)${${line:3}/.*}/* }
               lag=${(L)line[(R)\[,(R)\]]}
-              [[ -n $lag ]] && $field[lag]=${${${lag:1:1}/a/+}/b/-}${lag//[^0-9]}
-
-              [ ! ${line:l} = ${${line:l}#*ahead} ] && field[ahead]=${${${line:l}#*ahead}//[^[:digit:]]/}
-              [ ! ${line:l} = ${${line:l}#*behind} ] && field[behind]=${${${line:l}#*behind}//[^[:digit:]]/}
+              [[ -n $lag ]] && field[lag]=${${${lag:1:1}/a/+}/b/-}${lag//[^0-9]}
               ;;
           ('??') field[untracked]=true ;;
           ('!!') field[ignored]=true ;;
           ([MARC][ ]) field[staged]=true ;;
           (C[ MD]) field[staged]=true ;;
           ([DAU]*) field[conflict]=true ;;
-          # (\;*) ;;
           (*) field[modified]=true ;;
       esac
   done
@@ -62,9 +54,7 @@ function addon_gitty(){  #{{{2
 
   # First, build traffic lights based on flags
   local state=""
-  [[ -n ${field[ahead]} ]]  && state="$state%{$fg[cyan]%}+${field[ahead]}"
-  [[ -n ${field[behind]} ]] && state="$state%{$fg[cyan]%}-${field[behind]}"
-  [[ -n $field[lag] ]] && state="$tate%{$fg[cyns]%}$field[lag]"
+  [[ -n ${field[lag]} ]] && state="%{$fg[cyan]%}${field[lag]}"
   ${field[modified]}  && state="${state}%{$fg_bold[red]%}●%{$reset_color%}"
   ${field[staged]}    && state="${state}%{$fg_bold[green]%}●%{$reset_color%}"
   ${field[untracked]} && state="${state}%{$fg_bold[magenta]%}●%{$reset_color%}"
