@@ -623,18 +623,32 @@ au InsertLeave * hi User4 ctermbg=65 ctermfg=190 cterm=none
 "  autocmd WinLeave * set nocursorline
 "augroup END
 
+"# echo fugitive#extract_git_dir('.') -> full path to root .git dir
+"# echo fnamemodify(fugitive#extract_git-dir('.'),":p:h") -> relative to cur dir
+"use expand('%:p') to make it relative to current buffer's filename
+function! SL_git_info() abort
+    if !exists('b:git_dir')
+        return ''
+    endif
+    let info= fnamemodify(b:git_dir,':h:t')
+    let info.= "(" . fugitive#head() . ")"
+    "return fnamemodify(b:git_dir,':h:t') . " (" . fugitive#head() . ")"
+    return info
+endfunction
+
+
 set statusline=""                            " start out blank
 set statusline+=%2*                         " normal color for opening [
 set statusline+=%4*\                           " MODE color (changes on insert) 
 set statusline+=%{mode()==?'n'?'NORMAL':''}  " mode
 set statusline+=%{mode()==?'i'?'INSERT':''}
 set statusline+=%{mode()==?'v'?'VISUAL':''}
-set statusline+=\ %2*\                           " normal color ] [
+set statusline+=%2*\                           " normal color ] [
 set statusline+=[%{toupper(&ft)}]      " * file type
 set statusline+=\ %{SyntasticStatuslineFlag()}
-set statusline+=\ (%3*
-set statusline+=%{fugitive#head()}     " branch info
-set statusline+=%2*)\                       " - switch to User1 (see :hi)
+set statusline+=%{SL_git_info()}       " current git repo name
+set statusline+=%2*\                       " - switch to User1 (see :hi)
+" rest of status flags & info
 set statusline+=%1*%{&modified?'+':''}      " * +  flag (no leading ,)
 set statusline+=%{&readonly?'!!':''}     " * !! flag (not 'RO')
 set statusline+=%*                       " - switch back to default colors
