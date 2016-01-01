@@ -70,6 +70,49 @@ function addon_gitty(){  #{{{2
   echo "$msg← "
 }
 
+function git_prompt() {
+  # <repo name> (branch)[lag][xyz?!] <x|v>
+  local GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+  [[ -z "$GIT_ROOT" ]] && return
+
+  # take status flags from git status string (use -bz)
+  local GSS=""
+  GSS=$(git status -bz 2>/dev/null)
+  # build the prompt string
+  local state=""  # the [lag][xyz?!] part
+  local lag=${${${${GSS//$'\0'*}/\[a/+}/\[b/-}//[^+0-9-]/}    # ahead/behind <n> if any
+  # using bold colors requires %{$reset_color%} to go non-bold again
+  [[ -n "${lag}" ]] && state+="%{$fg[cyan]%}${lag}"
+  # \0?<space> -> changes, idx==wtree -> ready to be committed
+  GSSLEN=${#GSS}
+  [[ $GSSLEN -gt ${#GSS/$'\0'? } ]] && state+="%{$fg[green]%}●"
+  # \0<space>? -> changes, idx!=wtree -> changes need to be staged
+  [[ $GSSLEN -gt ${#GSS/$'\0' ?} ]] && state+="%{$fg[red]%}●"
+  # \0[^ ?!][ ?!] = 2letters, changes & idx!=wtree and/or unmerged stuff
+  [[ $GSSLEN -gt ${#GSS/$'\0'[^ ?!][^ ?!]} ]] && state+="%{$fg[magenta]%}●"
+  # \0?? untracked files present (normally shown)
+  [[ $GSSLEN -gt ${#GSS/$'\0'\?} ]] && state+="%{$fg[red]%}?"
+  # \0!! ignored files present (normally not shown)
+  [[ $GSSLEN -gt ${#GSS/$'\0'!} ]]  && state+="%{$fg[red]%}!"
+  [[ -n "$state" ]] && state="%{$fg[red][%{$reset_color%}$state%{$fg[red]%}]%{$reset_color%}"
+
+  # Build the git prompt
+  local msg=""
+  msg="%{$fg_bold[yellow]%}$(basename $GIT_ROOT)%{$reset_color%}"    # repo in yellow
+  msg+="%{$fg[red]%} (${${(s: :)GSS/[$'\0'.]/ }[2]}%)"               # branch name
+
+  if [[ -z $state ]]; then
+      msg+="%{$fg_bold[yellow]%}✓ %{$reset_color%}"       # OK, state empty
+  else
+      msg+="${state}%{$fg_bold[red]%} ✗ %{$reset_color%}" # NOK, state!=empty
+  fi
+  echo "$msg← "
+}
+
+# time ( for ((I=0; I<5000; I++ )); do git_prompt >/dev/null; done )
+#  ->  3,50s user 20,37s system 104% cpu 22,754 total
+# time ( for ((I=0; I<5000; I++ )); do addon_gitty >/dev/null; done ) 
+#  ->  3,78s user 21,16s system 104% cpu 23,826 total
 #setopt promptsubst
 autoload -U colors && colors # Enable colors in prompt
 
@@ -77,7 +120,7 @@ autoload -U colors && colors # Enable colors in prompt
 
 # left-prompt {{{2
 PROMPT='
-%{$fg[green]%}%n%{$reset_color%}@%{$fg[green]%}%m%{$reset_color%} → $(addon_gitty)%~
+%{$fg[green]%}%n%{$reset_color%}@%{$fg[green]%}%m%{$reset_color%} → $(git_prompt)%~
 %# '
 
 # sprompt {{{2
