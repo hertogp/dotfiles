@@ -8,9 +8,6 @@
 function _update_ruby_version() { #{{{2
   # Get active ruby version using rbenv or rvm
   typeset -g ruby_version=''
-  #which rbenv 1>/dev/null 2>/dev/null && ruby_version=${${(A)="$(rbenv version)"}[1]:l} && return
-  #which rvm 1>/dev/null 2>/dev/null && ruby_version="$(rvm i v g)" && return
-  #ruby_version="<?>"
   if rbenv 1>/dev/null 2>/dev/null; then
       ruby_version=${${(A)="$(rbenv version)"}[1]:l}
   elif rvm 1>/dev/null 2>/dev/null; then
@@ -24,53 +21,7 @@ function _update_ruby_version() { #{{{2
 # Only update global ruby_version when changing directories
 chpwd_functions+=(_update_ruby_version)
 
-function addon_gitty(){  #{{{2
-  # (arrays hashes) declared inside funcs are local by nature
-  local GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
-  [[ -z $GIT_ROOT ]] && return
-
-  typeset -A field
-  field=(branch '' lag '')
-  field+=(untracked false ignored false staged false modified false conflict false)
-  for line in ${(f)"$(git status -bsu --porcelain 2>/dev/null)"}; do
-      # See git status --help for explanation of the fields
-      case ${line[0,2]} in
-          ('##')
-              field[branch]=${(L)${${line:3}/.*}/* }
-              lag=${(L)line[(R)\[,(R)\]]}
-              [[ -n $lag ]] && field[lag]=${${${lag:1:1}/a/+}/b/-}${lag//[^0-9]}
-              ;;
-          ('??') field[untracked]=true ;;
-          ('!!') field[ignored]=true ;;
-          ([MARC][ ]) field[staged]=true ;;
-          (C[ MD]) field[staged]=true ;;
-          ([DAU]*) field[conflict]=true ;;
-          (*) field[modified]=true ;;
-      esac
-  done
-
-  # if we don't have a branch, report nothing
-  [[ -z ${field[branch]} ]] && return
-
-  # First, build traffic lights based on flags
-  local state=""
-  [[ -n ${field[lag]} ]] && state="%{$fg[cyan]%}${field[lag]}"
-  ${field[modified]}  && state="${state}%{$fg_bold[red]%}●%{$reset_color%}"
-  ${field[staged]}    && state="${state}%{$fg_bold[green]%}●%{$reset_color%}"
-  ${field[untracked]} && state="${state}%{$fg_bold[magenta]%}●%{$reset_color%}"
-  ${field[ignored]}   && state="${state}%{$fg_bold[cyan]%}●%{$reset_color%}"
-  ${field[conflict]}  && state="${state}%{$fg_bold[red]%}⚡︎%{$reset_color%}"
-  [[ -n $state ]]     && state="%{$fg[red][%{$reset_color%}$state%{$fg[red]%}]%{$reset_color%}"
-
-  local msg=""
-  msg="%{$fg_bold[yellow]%}$(basename $GIT_ROOT)%{$reset_color%}"
-  msg+=" %{$fg[red]%}(${field[branch]}%)%{$reset_color%}$state" 
-  [[ -z $state ]] && msg="$msg %{$fg_bold[yellow]%}✓ %{$reset_color%}"
-  [[ -n $state ]] && msg="$msg %{$fg_bold[red]%}✗ %{$reset_color%}"
-  echo "$msg← "
-}
-
-function git_prompt() {
+function git_prompt() {  #{{{2
   # <repo name> (branch)[lag][xyz?!] <x|v>
   local GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
   [[ -z "$GIT_ROOT" ]] && return
@@ -93,26 +44,96 @@ function git_prompt() {
   # \0?? untracked files present (normally shown)
   [[ $GSSLEN -gt ${#GSS/$'\0'\?} ]] && state+="%{$fg[red]%}?"
   # \0!! ignored files present (normally not shown)
-  [[ $GSSLEN -gt ${#GSS/$'\0'!} ]]  && state+="%{$fg[red]%}!"
+  # [[ $GSSLEN -gt ${#GSS/$'\0'!} ]]  && state+="%{$fg[red]%}!"
   [[ -n "$state" ]] && state="%{$fg[red][%{$reset_color%}$state%{$fg[red]%}]%{$reset_color%}"
 
   # Build the git prompt
-  local msg=""
-  msg="%{$fg_bold[yellow]%}$(basename $GIT_ROOT)%{$reset_color%}"    # repo in yellow
-  msg+="%{$fg[red]%} (${${(s: :)GSS/[$'\0'.]/ }[2]}%)"               # branch name
+  local msg="%{$fg_bold[yellow]%}$(basename $GIT_ROOT)%{$reset_color%}"  # repo in yellow
+  msg+="%{$fg[red]%} (${${(s: :)GSS/[$'\0'.]/ }[2]}%)"                   # branch name
 
   if [[ -z $state ]]; then
-      msg+="%{$fg_bold[yellow]%}✓ %{$reset_color%}"       # OK, state empty
+      msg+="%{$fg_bold[yellow]%} ✓ %{$reset_color%}"                     # OK, clean
   else
-      msg+="${state}%{$fg_bold[red]%} ✗ %{$reset_color%}" # NOK, state!=empty
+      msg+="${state}%{$fg_bold[red]%} ✗ %{$reset_color%}"                # NOK, dirty
   fi
-  echo "$msg← "
+  echo " $msg → "
 }
 
+function git_prompt2 () { #{{{2
+# output git status flags
+# git diff          (1) changes to tracked files, not staged yet
+# git diff --cached (2) changes to staged files vs HEAD
+# git diff HEAD     (3) changes to tracked files vs HEAD
+
+  local GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+  [[ -z "$GIT_ROOT" ]] && return
+  local msg=$(git symbolic-ref --short HEAD 2>/dev/null)
+  [[ -z "$msg" ]] && return
+
+  msg="%{$fg_bold[yellow]%}$GIT_ROOT%{$reset_color%} %{$fg[red]%}($msg)"
+  local state=""
+  git diff --no-ext-diff --quiet --cached 2>/dev/null || state+="%{$fg[green]%}●"
+  git diff --no-ext-diff --quiet 2>/dev/null || state+="%{$fg[red]%}●"
+  git diff --no-ext-diff --quiet HEAD 2>/dev/null || state+="%{$fg[magenta]%}●"
+  if [[ -z $state ]]; then
+      echo "$msg%{$fg_bold[yellow]%} ✓ %{$reset_color%}"
+  else
+      echo "$msg%{$fg[red]%}[$state%{$fg[red]]%{$fg_bold[red]%} ✗ %{$color_reset%}"
+  fi
+}
+
+function git_prompt3() {  #{{{2
+  # (arrays hashes) declared inside funcs are local by nature
+  local GIT_ROOT=""
+  GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+  [[ -z $GIT_ROOT ]] && return
+
+  typeset -A field
+  field=(branch '' lag '')
+  field+=(untracked false ignored false staged false modified false conflict false)
+  for line in ${(f)"$(git status -bsu --porcelain 2>/dev/null)"}; do
+      # See git status --help for explanation of the fields
+      case ${line[0,2]} in
+          ('##')
+              field[branch]=${(L)${${line:3}/.*}/* }
+              lag=${(L)line[(R)\[,(R)\]]}
+              [[ -n $lag ]] && field[lag]=${${${lag:1:1}/a/+}/b/-}${lag//[^0-9]}
+              ;;
+          ('??') field[untracked]=true ;;
+          ('!!') field[ignored]=true ;;
+          ([MARC][ ]) field[staged]=true ;;
+          (C[ MD]) field[staged]=true ;;
+          ([DAU]*) field[conflict]=true ;;
+          (*) field[modified]=true ;;
+      esac
+  done
+
+  # First, build traffic lights based on flags
+  local state=""
+  [[ -n $field[lag] ]] && state="%{$fg[cyan]%}$field[lag]"
+  $field[modified]  && state="${state}%{$fg_bold[red]%}●%{$reset_color%}"
+  $field[staged]    && state="${state}%{$fg_bold[green]%}●%{$reset_color%}"
+  $field[untracked] && state="${state}%{$fg_bold[magenta]%}●%{$reset_color%}"
+  $field[ignored]   && state="${state}%{$fg_bold[cyan]%}●%{$reset_color%}"
+  $field[conflict]  && state="${state}%{$fg_bold[red]%}⚡︎%{$reset_color%}"
+  [[ -n $state ]]   && state="%{$fg[red]%}[%{$reset_color%}$state%{$fg[red]%}]%{$reset_color%}"
+
+  local msg=""
+  msg="%{$fg_bold[yellow]%}$(basename $GIT_ROOT)%{$reset_color%}"
+  msg+=" %{$fg[red]%}($field[branch]%)%{$reset_color%}$state" 
+  [[ -z $state ]] && msg="$msg %{$fg_bold[yellow]%}✓ %{$reset_color%}"
+  [[ -n $state ]] && msg="$msg %{$fg_bold[red]%}✗ %{$reset_color%}"
+  echo "$msg← "
+}
 # time ( for ((I=0; I<5000; I++ )); do git_prompt >/dev/null; done )
-#  ->  3,50s user 20,37s system 104% cpu 22,754 total
+#  ->  2,50s user 19,15s system 105% cpu 20,538 total
+#
 # time ( for ((I=0; I<5000; I++ )); do addon_gitty >/dev/null; done ) 
-#  ->  3,78s user 21,16s system 104% cpu 23,826 total
+#  ->  2,55s user 19,15s system 105% cpu 20,606 total
+#
+# time ( for ((I=0; I<5000; I++ )); do git_prompt2 >/dev/null; done )
+#  -> 2,15s user 22,71s system 104% cpu 23,815 total
+#
 #setopt promptsubst
 autoload -U colors && colors # Enable colors in prompt
 
