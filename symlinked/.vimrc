@@ -1,20 +1,12 @@
 " pdh -- vimrc file, started 31 aug 2007
 " vim: set tw=0 sts=2 sw=2
 " Maintainer:  padh@gmail.com
-" Updated:     2015-03-07
+" Updated:     2016-01-01
 "
 " When started as "evim", evim.vim will already have its settings.
 if v:progname =~? "evim"
   finish
 endif
-
-function! BuildYCM(info)
-    if a:info.status == 'installed' || a:info.status == 'updated' || a:info.force
-        !mkdir -p ~/ycm_build
-        !cmake -G "Unix Makefiles" -DUSE_SYSTEM_LIBCLANG=ON ~/ycm_build ~/.vim/plugged/YouCompleteMe/third_party/ycmd/cpp
-        !make -C ~/ycm_build ycm_support_libs
-    endif
-endfunction
 
 " Vundle: {{{1, a vim plugin manager
 " See https://github.com/gmarik/Vundle.vim
@@ -25,38 +17,36 @@ endfunction
 " :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
 " :PluginSearch foo - searches www.vim-scripts.org (only!) for foo;
 " :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after the line 'call vundle#end()
+" :h vundle         - for more details
 "
 " Install a new plugin
 " --------------------
 " 1. add Plugin statement inbetween vundle#begin() /#end() calls
 " 2. restart vim (or source .vimrc again) and do :PluginInstall
-" Notes: 
-" * in Vundle window, hit 'u' for changelog, l for command log
-" * Install plugins from different sources as follows
+" Notes:
+" - Quit/Start Vim after changing any of the repo-url's!
+" - in Vundle window, hit 'u' for changelog, l for command log
+" - Install plugins from different sources as follows
 "   Plugin 'gmarik/vundle.vim'                   - from github.com
 "   Plugin 'L9'                                  - from http://vim-scripts.org/vim/scripts.html
 "   Plugin 'git://git.wincent.com/command-t.git' - from some other git repo
 "   Plugin 'file:///full-path/to/plugin/git-repo - from local machine
 "   Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}   - from subdir of repo
 "   Plugin 'user/L9', {'name': 'newL9'}          - avoid name conflict
-" * Quit/Start Vim after changing any of the repo-url's!
 "
 " Remove an old plugin
 " --------------------
-" In dotvimrc:
-" * remove the Plugin statement
-" In ~/.vim/bundle:
-" rm -rf <plugin-directory-to-be-removed>
+" - In dotvimrc:   remove/comment out  the Plugin statement
+" - ~/.vim/bundle: rm -rf <plugin-directory-to-be-removed>
 "
 " Update an existing plugin
 " -------------------------
 " :PluginInstall!    with a bang!
 " :PluginUpdate      same thing
 " Notes:
-" * PluginInstall! wont let you give a name
+" - once done, hit 'l' to view the log
+" - PluginInstall! wont let you give a name
+
 " Vundle {{{1
 set nocompatible                               " required
 filetype off                                   " required
@@ -73,37 +63,34 @@ Plugin 'https://github.com/vim-scripts/L9.git'  " VimL programming library
 
 " Plugins: {{{2
 " Navigation: {{{3
-Plugin 'https://github.com/vim-voom/VOoM.git'   " 2-pane file navigator
-Plugin 'https://github.com/zeroflyfire/taglist.vim.git' " --?-- vs ttags by tomtom?
-Plugin 'https://github.com/haya14busa/incsearch.vim'              " TODO: --?-- usefull?
+Plugin 'https://github.com/vim-voom/VOoM.git'              " 2-pane file navigator
+Plugin 'https://github.com/zeroflyfire/taglist.vim.git'    " --?-- vs ttags by tomtom?
+Plugin 'https://github.com/haya14busa/incsearch.vim'       " TODO: --?-- usefull?
 " FindFiles: {{{3
-Plugin 'https://github.com/vim-scripts/utl.vim.git'               " gf, gx etc..
-Plugin 'https://github.com/rking/ag.vim'          " XXX: do we actually use it?
+Plugin 'https://github.com/vim-scripts/utl.vim.git'        " gf, gx etc..
+Plugin 'https://github.com/rking/ag.vim'                   " silver searcher grep
 " Shougo: {{{3
-Plugin 'https://github.com/Shougo/unite.vim.git'                  " Unite & friends
-Plugin 'https://github.com/Shougo/neomru.vim.git'                 " --?-- (necessary?) most recently used
-Plugin 'https://github.com/sgur/unite-qf.git'                     " quickfix/loclist as Unite source
-Plugin 'https://github.com/Shougo/unite-outline.git'              " outline for various file types
-Plugin 'https://github.com/Shougo/vimshell.vim.git'   " Awesome VimShell
-Plugin 'https://github.com/Shougo/neocomplete.vim.git'  " auto completion of EVERYTHING
+Plugin 'https://github.com/Shougo/unite.vim.git'           " Unite & friends
+Plugin 'https://github.com/sgur/unite-qf.git'              " quickfix/loclist as Unite source
+Plugin 'https://github.com/Shougo/unite-outline.git'       " outline for various file types
+Plugin 'https://github.com/Shougo/vimshell.vim.git'        " Awesome VimShell
+Plugin 'https://github.com/Shougo/neocomplete.vim.git'     " auto completion of EVERYTHING
 Plugin 'https://github.com/Shougo/neosnippet.vim.git'
 Plugin 'https://github.com/Shougo/neosnippet-snippets.git'
-Plugin 'https://github.com/honza/vim-snippets.git'                " ,,
-"Plugin 'https://github.com/Shougo/vimfiler.vim.git'              " --?--  alternative to NERDTree
+Plugin 'https://github.com/honza/vim-snippets.git'
+"Plugin 'https://github.com/Shougo/vimfiler.vim.git'       " --?--
 " CodeSearch: - Russ Cox
 " http://swtch.com/~rsc/regexp/regexp4.html
 " https://github.com/junkblocker/codesearch.git
 " https://github.com/junkblocker/unite-codesearch.git
 " Tpope: {{{3
-Plugin 'https://github.com/tpope/vim-surround.git'
-Plugin 'https://github.com/tpope/vim-scriptease.git'
+Plugin 'https://github.com/tpope/vim-surround.git'     " easy add/del surrounds
+"Plugin 'https://github.com/tpope/vim-scriptease.git'  " when scripting
 Plugin 'https://github.com/tpope/vim-unimpaired.git'
-Plugin 'https://github.com/tpope/vim-vinegar.git'      " <<no more NERDTREE
-Plugin 'https://github.com/tpope/vim-commentary'
-Plugin 'https://github.com/tpope/vim-fugitive.git'
-Plugin 'https://github.com/tpope/vim-dispatch.git'
-"Plugin 'https://github.com/tpope/vim-speeddating.git'
-" Plugin 'https://github.com/tpope/vim-projectionist.git'  " map fname|globals for fast access
+Plugin 'https://github.com/tpope/vim-vinegar.git'      " << no more NERDTREE
+Plugin 'https://github.com/tpope/vim-commentary'       " (un)comment code
+Plugin 'https://github.com/tpope/vim-fugitive.git'     " git support
+Plugin 'https://github.com/tpope/vim-dispatch.git'     " spawn processes
 " Various: {{{3
 "Plugin vim-sneak " lighter alternative to easymotion? --?--
 "Plugin 'https://github.com/Lokaltog/vim-easymotion.git'           " --?-- 
@@ -112,39 +99,34 @@ Plugin 'https://github.com/godlygeek/tabular.git'                 " --?-- (infre
 Plugin 'https://github.com/edsono/vim-matchit.git'
 " Ruby: {{{3
 Plugin 'https://github.com/vim-ruby/vim-ruby.git'                 " ruby support
+Plugin 'https://github.com/kmdsbng/vim-ruby-eval.git'
 Plugin 'https://github.com/scrooloose/syntastic.git'
+" Plugin 'https://github.com/t9md/vim-ruby-xmpfilter.git'
+" Python: {{{3
 Plugin 'https://github.com/hdima/python-syntax.git'               " Python - syntax
 Plugin 'https://github.com/hynek/vim-python-pep8-indent'          " Python - indent
 Plugin 'https://github.com/fs111/pydoc.vim'                       " Python - help
 Plugin 'https://github.com/vim-scripts/pep8.git'                  " Python - political correctness
 Plugin 'https://github.com/yegle/python_match.git'                " Python - motions %,[%,]%,g%
 " Completion: {{{3
-" Plugin 'https://github.com/Valloric/YouCompleteMe.git', { 'do': function('BuildYCM') }
-"Plugin 'https://github.com/Valloric/YouCompleteMe'                " Completion
-" If updated, may require recompiling:
-" cd ~/.vim/bundle/YouCompleteMe/
-" sudo ./install.sh --clang-completer
-"Plugin 'https://github.com/sirver/ultisnips'                      " Snippets
-" Eval: {{{3
-Plugin 'https://github.com/kmdsbng/vim-ruby-eval.git'
-" Plugin 'https://github.com/t9md/vim-ruby-xmpfilter.git'
-" Tom Link: {{{3
-"Plugin 'https://github.com/tomtom/ttoc_vim.git'                   " --?-- (infrequently used)
-"Plugin 'https://github.com/tomtom/ttags_vim.git'                  " Source code navigation
+" - now done using Shougo's Unite
+" Plugin 'https://github.com/Valloric/YouCompleteMe'                " Completion
+"   If updated, may require recompiling:
+"   cd ~/.vim/bundle/YouCompleteMe/
+"   sudo ./install.sh --clang-completer
 " Pandoc: {{{3
 Plugin 'https://github.com/vim-pandoc/vim-pandoc.git'                 " Pandoc
 Plugin 'https://github.com/vim-pandoc/vim-pandoc-syntax.git'
 Plugin 'https://github.com/vim-pandoc/vim-pandoc-after.git'           " ,,
 
 " Colors: {{{3
-Plugin 'https://github.com/ajh17/Spacegray.vim.git'               " Dark colorscheme
-Plugin 'https://github.com/scwood/vim-hybrid.git'  "Another dark colorscheme
+Plugin 'https://github.com/ajh17/Spacegray.vim.git'    " Dark colorscheme
+Plugin 'https://github.com/scwood/vim-hybrid.git'      " Another dark colorscheme
 "Plugin 'https://github.com/godlygeek/colorchart.git'             " ,, (uncomment when needed)
 
 " Scratch Stuff: {{{2
-" Plugin 'file:///home/pdh/dev/vim/mm_vim'     " home-grown mongrels here
 Plugin 'https://github.com/powerman/vim-plugin-viewdoc.git'
-Plugin 'https://github.com/hertogp/dialk'
+Plugin 'https://github.com/hertogp/dialk'              " dial K for help
 call vundle#end()                              "vundle#end
 
 filetype plugin indent on
@@ -296,7 +278,7 @@ EOF
 " -------------
 "Use :W to write a file you opened with sudo (you'll need sudo rights)
 command! W  execute 'silent w !sudo tee % % > /dev/null' | :edit!
-" makes Y more in line with D
+" yank till end-of-line (like D deletes to eol)
 nnoremap Y y$
 " reformat paragraph, start at cursor. {Q to reformat whole paragraph
 nnoremap Q gq}
@@ -337,6 +319,8 @@ nnoremap <c-u> <c-u>zz
 nnoremap <c-d> <c-d>zz
 nnoremap g, g,zz
 nnoremap g: g;zz
+" open url even if quouted 'http://www.google.nl'
+" nnoremap ww <plug>NetrwBrowseX("<cfile>")
 
 " Voom
 " ----
@@ -509,21 +493,12 @@ augroup QuitNoFile
   au syntax * if &filetype=='unite'|nnoremap <buffer>q :UniteClose<cr>|endif
 augroup end
 
-" Nerdtree:
-"nnoremap <silent> <leader>n :NERDTreeToggle<CR>
-"nnoremap <silent> <leader>N :NERDTree %<cr>
-"let NERDTreeHijackNetrw=1
-
 " fonts:
-" - monaco - slashed zero        (gnome-term doesn't know the font?)
-" - consolas - slashed zero
-" - ubuntu mono
+" - monaco, consolas have slashed zeros. Ubuntu mono a dotted zero
 "
 " italic fonts?
 " `-> pandoc-syntax tries to highlight stuff with hi-groups that have cterm=italic 
 "     but that comes out horrible in some sort of reverse video.. yuk!
-" - now trying to find out howto get rid of the reverse video and see 
-"   the italics instead.
 " bash$ echo "\e[3m foo \e[23m"  does not echo foo in italics in xfce4-terminal
 " - no italics in xfce4-terminal
 " - works in gnome-terminal
@@ -917,9 +892,6 @@ let g:syntastic_loc_list_height = 15          " make lots of mistakes
 let g:syntastic_ignore_files = ['\v^/usr']    " don't check these
 " See ~/.pylintrc, and look for 'tmpdh' to see what changed
 
-" SuperMan:
-"
-
 " Matchit:
 " - see also ftplugin/python_match.vim for py-specific matching
 " - out of the box, it doesn't support Python in any way
@@ -934,27 +906,18 @@ let g:syntastic_ignore_files = ['\v^/usr']    " don't check these
 " Python:
 " Python Syntax:
 " https://github.com/hdima/python-syntax.git
-"   gitrepo for http://www.vim.org/scripts/script.php?script_id=790
+" - is gitrepo for http://www.vim.org/scripts/script.php?script_id=790
 let python_highlight_all = 1
 let python_version_2 = 1
 
-" Pep8 Indent:
-" https://github.com/hynek/vim-python-pep8-indent
-"
 " Pep8:
 " + sudo apt-get install pep8
 " See https://github.com/hynek/vim-python-pep8-indent.git
 " See https://github.com/vim-scripts/pep8.git
 let g:pep8_map='<leader>8'
 
-
 " Pydoc:
 " https://github.com/fs111/pydoc.vim
-" - \p{w,W,k,K} or plain K on key.word
-" - abc.def.ghi, K for help on:
-"    ^   ^   ^---- abc.def.ghi
-"    |    `------- abc.def
-"    `------------ abc
 let g:pydoc_open_cmd = 'botright vsplit'   " help to the right
 let g:pydoc_window_lines=1.0               " new tab, so full window
 let g:pydoc_use_drop=1                     " re-use an help tab/window
