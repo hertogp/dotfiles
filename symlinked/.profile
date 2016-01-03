@@ -8,10 +8,9 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
-# echo ".profile `date +%Y-%m-%d,%H:%M:%S` sourced (SHELL=$SHELL)." >> ~/log/shell.log
+echo ".profile `date +%Y-%m-%d,%H:%M:%S` sourced (SHELL=$SHELL)." >> ~/log/shell.log
 
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
-
