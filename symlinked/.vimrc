@@ -229,6 +229,7 @@ set number                   " show line numbers
 set numberwidth=4            " line number column width
 set ruler                    " show the cursor position all the time
 set showcmd                  " display incomplete commands
+set noshowmode               " current mode already display in statusline
 set incsearch                " do incremental searching
 set laststatus=2             " last window always has a status line
 set showmatch                " Show matching brackets.

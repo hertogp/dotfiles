@@ -8,18 +8,10 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
-echo `date` . "bash: ran .profile on startup shell">> ~/log/bash.log
-# if running bash
-if [ -n "$BASH_VERSION" ]; then
-    # include .bashrc if it exists
-    if [ -f "$HOME/.bashrc" ]; then
-	. "$HOME/.bashrc"
-    fi
-fi
+# echo ".profile `date +%Y-%m-%d,%H:%M:%S` sourced (SHELL=$SHELL)." >> ~/log/shell.log
 
-# pdh - we set PATH in dotbashrc which is sourced above...
 # set PATH so it includes user's private bin if it exists
-#if [ -d "$HOME/bin" ] ; then
-#    PATH="$HOME/bin:$PATH"
-#fi
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
 

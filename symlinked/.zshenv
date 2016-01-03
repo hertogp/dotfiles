@@ -6,4 +6,4 @@
 # .zlogout  - source upon logout
 
 # For now we have nothing here
-echo ".zshenv `date +%Y-%m-%d,%H:%M:%S` sourced." >> ~/log/zshell.log
+# echo ".zshenv `date +%Y-%m-%d,%H:%M:%S` sourced." >> ~/log/shell.log

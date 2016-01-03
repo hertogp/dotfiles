@@ -1,4 +1,3 @@
-alias mf='find . -type -f -print0 | xargs -0 mv -t /home/dta/ebooks'
 alias lsock='sudo netstat -ntulp'
 alias lsu='sudo du -hsc $(ls -lpA  | awk '"'"'/^d/ {print $9}'"'"')'
 alias ls.system='sudo inxi -c 29 -b'

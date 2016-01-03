@@ -2,7 +2,7 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
-echo `date` . " running .bashrc" >> ~/log/bash.log
+# echo ".bashrc `date +%Y-%m-%d,%H:%M:%S` sourced." >> ~/log/shell.log
 # VIM {{{1 
 
 # A terminal interprets the chars on its input and captures <C-q>/<C-s> which

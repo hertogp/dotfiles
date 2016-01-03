@@ -1,3 +1,3 @@
-echo `date` . "bash: ran .bash_profile on startup shell">> ~/log/bash.log
+# echo ".bash_profile `date +%Y-%m-%d,%H:%M:%S` sourced." >> ~/log/shell.log
 # xmodmap ~/.xmodmaprc
 
