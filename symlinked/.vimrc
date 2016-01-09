@@ -250,8 +250,8 @@ au FileType vim set sts=2 sw=2 tabstop=2
 
 " py.path += ~/.vim/pylib {{{2
 " ----------------------------
-" - see also /usr/share/vim/vim73/ftplugin/python.vim
-" - see also after/ftplugin/python.vim
+" - see also /usr/share/vim/vim7<x>/ftplugin/python.vim
+
 " - extend python path with a vim speficic pylib directory.
 " - use :scrip[tnames] to list all sourced script names (1st = 1st sourced)
 " - vim.eval("expand('<sfile>')")
