@@ -12,6 +12,11 @@ alias cdp='cd /home/dta/work/proj'
 alias cdv='cd ~/.vim'
 
 # -------------------------------------------------------------------
+# task management
+# -------------------------------------------------------------------
+alias tw='python ~/lib/python/t.py --task-dir ~/tasks --list work'
+alias td='python ~/lib/python/t.py --task-dir ~/tasks --list dwark'
+# -------------------------------------------------------------------
 # Ruby stuff
 # -------------------------------------------------------------------
 alias ri='ri -Tf ansi' # Search Ruby documentation

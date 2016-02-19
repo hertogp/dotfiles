@@ -31,8 +31,8 @@ setopt complete_in_word # Allow completion from within a word/phrase
 unsetopt menu_complete # do not autoselect the first completion entry
 
 # Correction {{{ 1
-setopt correct # spelling correction for commands
-setopt correctall # spelling correction for arguments
+unsetopt correct # spelling correction for commands
+unsetopt correctall # spelling correction for arguments
 
 # Prompt {{{1
 setopt prompt_subst # Enable parameter expansion, command substitution, and arithmetic expansion in the prompt
