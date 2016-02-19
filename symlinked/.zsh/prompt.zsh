@@ -66,7 +66,7 @@ autoload -U colors && colors # Enable colors in prompt
 
 # left-prompt {{{2
 PROMPT='
-%{$fg[green]%}%m%{$reset_color%} $(git_prompt) 
+%{$fg[green]%}%m%{$reset_color%} $(git_prompt)
 %# '
 
 # sprompt {{{2
