@@ -181,7 +181,7 @@ hi link unitePrompt Function
 
 fun! My_unite_settings()
     " mapping q in unite buffer doesn't ssem to work?
-    nnoremap <silent><buffer>q :UniteClose
+    nnoremap <silent><buffer><esc> :UniteClose
     nnoremap <buffer><F5> <Plug>(unite_restart)
     nnoremap <buffer><F3> <Plug>(unite_toggle_auto_preview)
 endfun
