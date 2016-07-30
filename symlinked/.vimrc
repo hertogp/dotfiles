@@ -141,21 +141,23 @@ filetype plugin indent on
 let g:unite_data_directory=expand('~/.cache/unite')
 let g:unite_source_buffer_time_format=" (%Y-%m-%d %H:%M:%S)"
 let g:unite_source_grep_max_candidates=2000
+" when browsing grep results, cursorline changes background of the line
+" so hilighting matches with a bgcolor gets messed up on the current line
+" so use something without special background, like Question
+let g:unite_source_grep_search_word_highlight='Question'
 if executable('ag') " Use ag in unite file actions.
     " Grep
     let g:unite_source_grep_command = 'ag'
-    let g:unite_source_grep_default_opts =
-    \ '-i --line-numbers --nocolor --nogroup --hidden --ignore ' .
-    \  '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
+    let g:unite_source_grep_default_opts = "-i --nocolor --nogroup --hidden --ignore '*.pdf' --ignore '*.rtf' " .
+          \ "--ignore '*.html' --ignore '*.vce' "
     let g:unite_source_grep_recursive_opt = ''
 
     " file list
-    let g:unite_source_rec_async_command = ['ag','--follow','--nocolor','--nogroup','--hidden','-g', "."]
+    let g:unite_source_rec_async_command = ['ag','--follow','--nocolor','--nogroup','--hidden','-g', '']
 endif
 let g:unite_source_alias_aliases = {
-            \'notes':{'source': 'file_rec', 'args': '/home/www/dwark/src/notes'},
-            \ 'dwark':{'source':'file_rec','args':'/home/www/dwark/src'},
-            \ 'work':{'source':'file_rec','args':'/home/www/work/src'},
+            \'notes':{'source': 'file_rec', 'args': '/home/www/notes'},
+            \ 'dwark':{'source': 'file_rec','args': '/home/www/dwark'},
             \}
 call unite#filters#matcher_default#use(['matcher_regexp'])
 call unite#filters#sorter_default#use(['sorter_rank'])
@@ -168,7 +170,6 @@ call unite#custom#source('file_rec,file_rec/async', 'max_candidates', 0)
 call unite#custom#profile('default', 'context', {
       \ 'prompt': '»',
       \ 'update_time': 200,
-      \ 'cursor_line_highlight': 'CursorLine',
       \ 'direction': 'botright',
       \ 'prompt_direction': 'top',
       \ })
@@ -180,8 +181,7 @@ call unite#custom#profile('source/file', 'context', {
 hi link unitePrompt Function
 
 fun! My_unite_settings()
-    " mapping q in unite buffer doesn't ssem to work?
-    nnoremap <silent><buffer><esc> :UniteClose
+    nnoremap <silent><buffer>q :UniteClose
     nnoremap <buffer><F5> <Plug>(unite_restart)
     nnoremap <buffer><F3> <Plug>(unite_toggle_auto_preview)
 endfun
@@ -294,6 +294,7 @@ nnoremap <leader>ed :edit /home/www/dwark/tasks/dwark.txt<cr>
 nnoremap <leader>ew :edit /home/www/work/tasks/work.txt<cr>
 " escape to normal mode
 inoremap jj <ESC>
+inoremap hh <ESC>:update<cr>
 nnoremap <F5> :redraw!<cr>
 " weirdness with copy/past to/from X clipboard.
 " vmap <C-c> y: call system("xclip -i -selection clipboard", getreg("\""))<CR>
@@ -331,7 +332,6 @@ au FileType voomtree nmap <silent><buffer>J <down>
 au FileType voomtree nmap <silent><buffer>K <up>
 
 
-    nnoremap <silent><buffer>q :UniteClose
 " turnoff highlighted search
 nnoremap <c-n> :nohl<CR>
 
@@ -349,12 +349,6 @@ nnoremap <c-p> <c-w>p
 " <c-S> is seen as <c-s>? Dunno how this happens ..
 inoremap <c-s> <esc>:update<CR>
 nnoremap <c-s> <esc>:update<CR>
-
-" sort lines - simple o- oneliner items list
-nnoremap <silent> <leader>sl :ma a<CR>{jV}k:sort i<CR>:'a<CR>
-" run a :vim cmd: in the text, usefull for hints like :he gfm:
-" nnoremap <silent> <leader>x T:<c-v>t:y:@"<cr>
-" nnoremap <silent> <leader>X T:<c-v>,:@"<cr>
 
 " Tlib:
 " ----
@@ -375,7 +369,7 @@ augroup END
 hi link InputlListIndex      LineNr      " tlib's index of each line
 hi link InputlListCursor     CursorLine  " the current line
 hi link InputlListSelected   Conceal     " a selected line
-hi def link InputlListNormal Comment     " a normal line
+hi default link InputlListNormal Comment     " a normal line
 hi default link hl_nth_word  WildMenu    " highlight single word
 
 " TToC:
@@ -483,7 +477,6 @@ augroup QuitNoFile
   au!
   " Note: sometimes buftype gets set after the bufenter event
   au bufenter * if &buftype=='nofile'|nnoremap <buffer> q <esc>:q<cr>|endif
-
   au FileType nofile nnoremap <buffer> q <esc>:q<cr><c-w>p
   au syntax * if &buftype=='nofile'|nnoremap <buffer> q <esc>:q<cr>|endif
   au syntax * if &syntax == 'man'|nnoremap <buffer> q <esc>:q<cr>|endif
@@ -520,19 +513,23 @@ nnoremap <space>R :<C-u>Unite -no-split -input= -start-insert file_rec/async:!<c
 
 " Grep Files: {{{3
 nnoremap <space>g :<C-u>Unite -no-split -silent -buffer-name=unite-ag grep:.<cr>
+nnoremap <space>G :<C-u>Unite -no-split -silent -buffer-name=unite-ag grep:.<cr>
 " todo
 
 " Find Buffers: {{{3
-" b - to list all buffers, B - to see 'normal' buffers
+" b - to list buffers, B - to see all buffers
 nnoremap <space>B :<C-u>Unite -no-split buffer:!<cr>
 nnoremap <space>b :<C-u>Unite -no-split buffer<cr>
 
 " Find In Buffers: {{{3
 nnoremap <space>a :<C-u>Unite -input=\v\c^(#+\|\=+\|\s*o\|\s*x) line<cr>
-nnoremap <space>n :UniteNext<cr>
-nnoremap <space>N :UnitePrevious<cr>
 
-" Grep Buffers: {{{3
+" Find Accross Buffers: {{{3
+" next/previous match from last search
+nnoremap <space>n :UniteNext<cr><esc>zz
+nnoremap <space>N :UnitePrevious<cr><esc>zz
+
+" Grep inside a buffer: {{{3
 " filter lines in buffer
 nnoremap <space>l :<C-u>Unite -no-split -start-insert line<cr>
 
@@ -556,7 +553,7 @@ if &t_Co > 2 || has("gui_running")
   colorscheme spacegray
   syntax on                  " syntax highlighting
   set cursorline             " highlight current line
-  "highlight CursorLine  ctermbg=234
+  highlight CursorLine  ctermbg=234
   highlight ColorColumn ctermbg=DarkGrey ctermfg=white
   call matchadd('ColorColumn','\%81v', 100) " only color 81st column
   hi Pmenu    term=None cterm=italic ctermfg=lightgrey ctermbg=darkgrey "250 ctermbg=10
@@ -978,14 +975,14 @@ augroup end
 " $ cd ~/.vim/YouCompleteMe
 " $ ./install.sh --clang-completer --omnisharp-completer
 
-" YouCompleteMe:
+" YouCompleteMe: {{{2
 let g:ycm_always_populate_location_list = 1
 let g:ycm_autoclose_preview_window_after_completion=1
 nnoremap <leader>jg :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 
 "
-" Pandoc:
+" Pandoc: {{{2
 " ==============================================================
 " ----------------------------------------------------------------
 " Vim Pandoc:
@@ -1010,18 +1007,24 @@ let g:pandoc#modules#disabled = ["folding"]          " got Voom for that
 let g:pandoc#command#custom_open = "Pandoc_xdg_open" " How Pandoc! opens files
 let g:pandoc#command#use_message_buffers=1
 let g:pandoc#after#modules#enabled = ["ultisnips", "unite"]
+let g:pandoc#command#latex_engine = "pdflatex"
 
-
-fun! Pandoc_xdg_open(file)
-  " custom open func for g:pand#command#custom_open
+fun! Pandoc_xdg_open(file) " custom open func for g:pand#command#custom_open
   return "xdg-open " . a:file
 endf
 
-augroup PandocGrp
+augroup auPandoc
     au!
-    autocmd FileType pandoc nnoremap <buffer><F3> <esc>:Pandoc! #article<cr>
     autocmd FileType pandoc set formatoptions="want"
-
+    " autocmd FileType pandoc let &makeprg="~/bin/mk.notes %"
+    "   makeprg is setup via vim-pandoc's compiler 
+    "   see ~/.vim/after/compiler/pandoc.vim, where a proper makeprg is set
+    "   this method does not need the ~/bin/mk.notes shell script.
+    " F3 - to compile the current markdown buffer to pdf
+    " F5 - to compile & preview the current markdown buffer in evince
+    autocmd FileType pandoc nnoremap <buffer><F3> <esc>:silent make\|redraw!\|copen<cr>
+    autocmd FileType pandoc nnoremap <buffer><F5> <esc>:silent make\|redraw!\|call vimproc#system_bg("evince ".expand("%:r").".pdf")<cr>
+    autocmd FileType pandoc compiler pandoc
 augroup END
 
 " Colors: {{{2

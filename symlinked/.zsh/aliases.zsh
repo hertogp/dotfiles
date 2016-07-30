@@ -7,9 +7,14 @@ alias ls.usage='sudo du -hsc $(ls -lpA  | awk '"'"'/^d/ {print $9}'"'"')'
 alias ls.system='sudo inxi -c 29 -b'
 alias ls.sockets='sudo netstat -ntulp'
 alias cdw='cd /home/www/dwark'
+alias cdn='cd /home/www/notes'
 alias cdr='cd /home/www/work'
 alias cdp='cd /home/dta/work/proj'
 alias cdv='cd ~/.vim'
+
+alias pd.notes='pandoc -f markdown+hard_line_breaks+compact_definition_lists -t latex -V papersize:a4paper -V geometry:margin=0.5in -o notes.pdf'
+alias pdc.notes='pandoc -f markdown+compact_definition_lists -t latex -V papersize:a4paper -V geometry:margin=0.5in -o notes.pdf'
+alias pdd.notes='pandoc -f markdown+definition_lists -t latex -V papersize:a4paper -V geometry:margin=0.5in -o notes.pdf'
 
 # -------------------------------------------------------------------
 # task management

@@ -73,4 +73,5 @@ PROMPT='
 export SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color [(y)es (n)o (a)bort (e)dit]? "
 
 # right-prompt {{{2
-RPROMPT='${ruby_version}'
+# RPROMPT='${ruby_version}'
+RPROMPT='%(?..(%?%))'

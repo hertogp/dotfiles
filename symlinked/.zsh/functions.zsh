@@ -112,10 +112,24 @@ vim()
     # osx users, use stty -g
     local STTYOPTS="$(stty --save)"     # save terminal settings
     stty stop '' -ixoff                 # turn off Xon/Xoff
+    echo "vim $@"
     command vim "$@"
     stty "$STTYOPTS"                    # restore terminal settings
 }
 
+
+vn()
+{
+    # osx users, use stty -g
+    # vim -c "Ag subject:" to start with a grep on subject lines?
+    PREVDIR=$(pwd)
+    cd /home/www/notes
+    local STTYOPTS="$(stty --save)"     # save terminal settings
+    stty stop '' -ixoff                 # turn off Xon/Xoff
+    command vim "$@"
+    stty "$STTYOPTS"                    # restore terminal settings
+    cd ${PREVDIR}
+}
 
 pw ()
 {
