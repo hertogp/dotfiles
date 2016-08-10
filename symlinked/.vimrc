@@ -403,12 +403,13 @@ nnoremap <silent> <leader>f :LAg! -Qi shellescape(expand('<CWORD>'),1)<CR>
 nnoremap <silent> <leader>F :LAg! -Qi fnameescape(expand('<CWORD>'))<CR>
 nnoremap <silent> <leader>A :LAg! '^\s*[ox]\s' *.txt<CR>
 "nnoremap <silent> <leader>a :TToC ^["/#[:blank:]-]*\s*[oxcp]\s.*$<CR>
-nnoremap <silent> <leader>a <esc>:TToC ^\(=\+\\|[ox]\)\s\+\S.*<CR>
-nnoremap <silent> <leader>o :TToC ^["/#[:blank:]-]*\s*o\s\+\S.*<CR>
-nnoremap <silent> <leader>x :TToC ^["/#[:blank:]-]*\s*x\s\+\S.*<CR>
-nnoremap <silent> <leader>w :TToC! .*<c-r><c-a>.*<cr>
-nnoremap <silent> <leader>t :TToC<CR>
+"nnoremap <silent> <leader>a <esc>:TToC ^\(=\+\\|[ox]\)\s\+\S.*<CR>
+"nnoremap <silent> <leader>o :TToC ^["/#[:blank:]-]*\s*o\s\+\S.*<CR>
+"nnoremap <silent> <leader>x :TToC ^["/#[:blank:]-]*\s*x\s\+\S.*<CR>
+"nnoremap <silent> <leader>w :TToC! .*<c-r><c-a>.*<cr>
+"nnoremap <silent> <leader>t :TToC<CR>
 nnoremap <f8> :echom 'line ' . line(".") . ' -> hi <' . synIDattr(synID(line("."),col("."),1),"name") . '>, transparent<' . synIDattr(synID(line("."),col("."),0),"name") . '>, local<' . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . '>'<CR>
+" browse output of a command, typing filters directly, ESC takes you back
 nnoremap <F9> :call tlib#cmd#BrowseOutput(input('Browse which command: '))<CR>
 
 " UltiSnips:
@@ -504,7 +505,7 @@ set t_ZR=[23m    " terminal code for: italics end
 nnoremap <space><space> :<c-u>UniteResume<cr><esc>
 nnoremap <space>f :<C-u>UniteWithBufferDir -no-split file<cr>
 nnoremap <space>F :<C-u>Unite -no-split file<cr>
-":! 
+"
 nnoremap <space>p :<C-u>UniteWithProjectDir -no-split -start-insert file_rec/async:!<cr>
 nnoremap <space>P :<C-u>UniteWithProjectDir -no-split file_rec<cr><c-l>
 
@@ -1022,8 +1023,8 @@ augroup auPandoc
     "   this method does not need the ~/bin/mk.notes shell script.
     " F3 - to compile the current markdown buffer to pdf
     " F5 - to compile & preview the current markdown buffer in evince
-    autocmd FileType pandoc nnoremap <buffer><F3> <esc>:silent make\|redraw!\|copen<cr>
-    autocmd FileType pandoc nnoremap <buffer><F5> <esc>:silent make\|redraw!\|call vimproc#system_bg("evince ".expand("%:r").".pdf")<cr>
+    autocmd FileType pandoc nnoremap <buffer><S-F4> <esc>:silent make\|redraw!\|copen<cr>
+    autocmd FileType pandoc nnoremap <buffer><F4> <esc>:silent make\|redraw!\|call vimproc#system_bg("evince ".expand("%:r").".pdf")<cr>
     autocmd FileType pandoc compiler pandoc
 augroup END
 

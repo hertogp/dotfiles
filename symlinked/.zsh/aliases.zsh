@@ -12,6 +12,17 @@ alias cdr='cd /home/www/work'
 alias cdp='cd /home/dta/work/proj'
 alias cdv='cd ~/.vim'
 
+
+# -------------------------------------------------------------------
+# mounting stuff
+# -------------------------------------------------------------------
+alias mnt.playon='sudo mount -t cifs //192.168.178.2/usb1 /home/pdh/mnt/playon'
+alias umnt.playon='sudo umount /home/pdh/mnt/playon'
+# -------------------------------------------------------------------
+# taking notes
+# -------------------------------------------------------------------
+# See also:
+# ~/bin/mk.notes
 alias pd.notes='pandoc -f markdown+hard_line_breaks+compact_definition_lists -t latex -V papersize:a4paper -V geometry:margin=0.5in -o notes.pdf'
 alias pdc.notes='pandoc -f markdown+compact_definition_lists -t latex -V papersize:a4paper -V geometry:margin=0.5in -o notes.pdf'
 alias pdd.notes='pandoc -f markdown+definition_lists -t latex -V papersize:a4paper -V geometry:margin=0.5in -o notes.pdf'
