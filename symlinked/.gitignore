@@ -1,22 +1,24 @@
+# directories to ignore
 bundle
 cache
 cache/**
 tmp/
 scr/
-.git/**
+.git
+
+# files to ignore
+# - backup files
 *~
 **/*~
+# - tmp vim swap files
 *.swp
+**/*.swp
+# - python bytecode
 *.pyc
 **/*.pyc
-
-# ignore tags created for help texts
-doc/tags
-**/tags
+# - tags created for help texts
 tags
-
-# No python bytecode files
-**/*.pyc
-
+**/tags
+# - various
 .netrwhist
 
