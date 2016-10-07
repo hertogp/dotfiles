@@ -71,9 +71,9 @@ alias gu="git shortlog | grep -E '^[^ ]'"
 # -------------------------------------------------------------------
 # Python virtualenv 
 # -------------------------------------------------------------------
-alias mkenv='mkvirtualenv'
-alias on="workon"
-alias off="deactivate"
+alias v.env='virtualenv venv'
+alias v.on=". venv/bin/activate"
+alias v.off="deactivate"
 
 # Force tmux to use 256 colors
 alias tmux='TERM=screen-256color-bce tmux'

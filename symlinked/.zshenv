@@ -7,3 +7,9 @@
 
 # For now we have nothing here
 # echo ".zshenv `date +%Y-%m-%d,%H:%M:%S` sourced." >> ~/log/shell.log
+
+# load venv/bin/activate if available when starting new shell
+# - makes vim's help ('K') work when developing in a virtual environment
+if [[ -n $VIRTUAL_ENV && -e "${VIRTUAL_ENV}/bin/activate" ]]; then
+  source "${VIRTUAL_ENV}/bin/activate"
+fi
