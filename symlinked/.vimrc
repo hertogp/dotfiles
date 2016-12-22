@@ -88,7 +88,7 @@ Plugin 'https://github.com/tpope/vim-surround.git'     " easy add/del surrounds
 "Plugin 'https://github.com/tpope/vim-scriptease.git'  " when scripting
 Plugin 'https://github.com/tpope/vim-unimpaired.git'
 Plugin 'https://github.com/tpope/vim-vinegar.git'      " << no more NERDTREE
-Plugin 'https://github.com/tpope/vim-commentary'       " (un)comment code
+Plugin 'https://github.com/tpope/vim-commentary'       " gc to (un)comment code
 Plugin 'https://github.com/tpope/vim-fugitive.git'     " git support
 Plugin 'https://github.com/tpope/vim-dispatch.git'     " spawn processes
 " Various: {{{3

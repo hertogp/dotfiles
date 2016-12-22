@@ -52,7 +52,7 @@ alias 'bk=cd $OLDPWD'
 # -------------------------------------------------------------------
 alias ga='git add'
 alias gp='git push'
-alias gl='git log'
+alias gl='git log --oneline'
 alias gpl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gs='git status'
 alias gss='git status -sbu'
