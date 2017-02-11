@@ -74,7 +74,11 @@ Plugin 'https://github.com/Shougo/unite.vim.git'           " Unite & friends
 Plugin 'https://github.com/sgur/unite-qf.git'              " quickfix/loclist as Unite source
 Plugin 'https://github.com/Shougo/unite-outline.git'       " outline for various file types
 Plugin 'https://github.com/Shougo/vimshell.vim.git'        " Awesome VimShell
-Plugin 'https://github.com/Shougo/neocomplete.vim.git'     " auto completion of EVERYTHING
+if has("nvim")
+  Plugin 'https://github.com/Shougo/deoplete.nvim.git'       " nvim alternative to neocomplete
+else
+  Plugin 'https://github.com/Shougo/neocomplete.vim.git'     " auto completion of EVERYTHING
+endif
 Plugin 'https://github.com/Shougo/neosnippet.vim.git'
 Plugin 'https://github.com/Shougo/neosnippet-snippets.git'
 Plugin 'https://github.com/honza/vim-snippets.git'
@@ -149,7 +153,7 @@ if executable('ag') " Use ag in unite file actions.
     " Grep
     let g:unite_source_grep_command = 'ag'
     let g:unite_source_grep_default_opts = "-i --nocolor --nogroup --hidden --ignore '*.pdf' --ignore '*.rtf' " .
-          \ "--ignore '*.html' --ignore '*.vce' "
+          \ "--ignore '*.vce' "
     let g:unite_source_grep_recursive_opt = ''
 
     " file list
@@ -162,11 +166,15 @@ let g:unite_source_alias_aliases = {
 call unite#filters#matcher_default#use(['matcher_regexp'])
 call unite#filters#sorter_default#use(['sorter_rank'])
 call unite#custom#source('file,file/new,file_rec,file_rec/async', 'matchers',
-      \'matcher_fuzzy')
+      \'matcher_regexp')
 call unite#custom#source('outline,line,grep,session', 'matchers','matcher_regexp')
-" customize the default Unite window that presents the candidate-list
+
+" no limit on number of files found in candidate list
 let g:unite_source_rec_max_cache_files = 0
 call unite#custom#source('file_rec,file_rec/async', 'max_candidates', 0)
+
+" allow up to 200 candidates when grepping files
+call unite#custom#source('grep', 'max_candidates', 200)
 call unite#custom#profile('default', 'context', {
       \ 'prompt': '»',
       \ 'update_time': 200,
@@ -241,7 +249,7 @@ set wildmenu                 " show cmd autocompletion in statusline
 set lazyredraw               " don't redraw during macro execution
 set clipboard=unnamed        " use clipboard reg-* for yank ops
 set clipboard+=unnamedplus   " use clipbaord reg-+ for all y,d,c & p ops
-set clipboard+=autoselect    " visual->X11-selection (paste middle mouse button)
+"set clipboard+=autoselect    " visual->X11-selection (paste middle mouse button)
 set list                     " show listchars for more visibility of stuff
 set listchars=tab:>~,trail:-,precedes:<,extends:>  "show tabs and stuff.
 set splitright               " new vsplit window to the right of curr window
@@ -294,7 +302,12 @@ nnoremap <leader>ed :edit /home/www/dwark/tasks/dwark.txt<cr>
 nnoremap <leader>ew :edit /home/www/work/tasks/work.txt<cr>
 " escape to normal mode
 inoremap jj <ESC>
+" escape to normal mode and update
 inoremap hh <ESC>:update<cr>
+" opposite of Shift-J (ie split lines instead of join lines)
+" Alt key actually maps to \033 (type sed -n l, then Alt-j -> \033j
+" so an alternate mapping could be nnoremap <esc>[033j i
+nnoremap j i<esc>
 nnoremap <F5> :redraw!<cr>
 " weirdness with copy/past to/from X clipboard.
 " vmap <C-c> y: call system("xclip -i -selection clipboard", getreg("\""))<CR>
@@ -374,14 +387,14 @@ hi default link hl_nth_word  WildMenu    " highlight single word
 
 " TToC:
 " ----
-let g:ttoc_vertical = 0  " ttoc opens under current window
-let g:tlib_viewline_position = 'z.'
+"let g:ttoc_vertical = 0  " ttoc opens under current window
+"let g:tlib_viewline_position = 'z.'
 " TTOC's default regex for asciidoc filetypes.
 " - include headers starting with ='s
 " - as well as actions defined i/t the text
 " - any leading non-text (whitespace and comment signs) are ignored here
 "   (this is different in .vimrc's rgx's used for ,a/,A/,o/,x)
-let g:ttoc_rx_asciidoc = '^\(=\+.*\|["/#[:blank:]]*\s*[oOxXcC]\s.*\)'
+"let g:ttoc_rx_asciidoc = '^\(=\+.*\|["/#[:blank:]]*\s*[oOxXcC]\s.*\)'
 " ,t run default TToC (filetype specific) rgx on current file
 " ,w run TToC for current word under cursor
 " ,A all actions (oxcp) from this dir and down in all files
@@ -500,50 +513,63 @@ augroup end
 set t_ZH=[3m     " terminal code for: italics mode (i.e. start italics)
 set t_ZR=[23m    " terminal code for: italics end
 
-" Find Files: {{{3
-" lowercase = withbufferdir, uppercase = currentworkingdir
+" Space Keymap: {{{3
+" Notes:
+" - use <enter> to enter a directory, use q to go back (up)
+" - lowercase = withbufferdir, uppercase = currentworkingdir
+" Nagivation:
+" q (w/o space) returns to previous unite buffer (e.g. prev directory)
+" 2x<space> resume last unite buffer
+" n UniteNext
+" N UnitePrevious
+" Find Files:
+" f browse for files, from current buffer dir
+" F browse for files, from project root dir.
+" p filter file-list, start at project root dir, honor .gitignore
+" P filter file-list, start at project root dir, ignore .gitignore
+" r same as p
+" R same as P
+" Grep Files:
+" g grep for <pattern> in files under project root dir
+" G same as g
+" Find Buffers:
+" b - to list buffers
+" B - to list ALL buffers
+" Find In Buffers:
+" <space>+<letter>
+" a find [ox] items in buffer
+" l filter lines in buffer, type filter yourself
+" d filter with yyyy-mm-dd for today
+" m filter with yyyy-mm for this month
+" o filter for markdown headers & open actions (see hierarchy + open items)
+
+" Navigation: {{{3
 nnoremap <space><space> :<c-u>UniteResume<cr><esc>
+nnoremap <space>n :UniteNext<cr><esc>zz
+nnoremap <space>N :UnitePrevious<cr><esc>zz
+
+" Find Files: {{{3
 nnoremap <space>f :<C-u>UniteWithBufferDir -no-split file<cr>
 nnoremap <space>F :<C-u>Unite -no-split file<cr>
-"
 nnoremap <space>p :<C-u>UniteWithProjectDir -no-split -start-insert file_rec/async:!<cr>
 nnoremap <space>P :<C-u>UniteWithProjectDir -no-split file_rec<cr><c-l>
-
 nnoremap <space>r :<C-u>UniteWithBufferDir -no-split -start-insert file_rec/async:!<cr>
 nnoremap <space>R :<C-u>Unite -no-split -input= -start-insert file_rec/async:!<cr>
 
 " Grep Files: {{{3
 nnoremap <space>g :<C-u>Unite -no-split -silent -buffer-name=unite-ag grep:.<cr>
 nnoremap <space>G :<C-u>Unite -no-split -silent -buffer-name=unite-ag grep:.<cr>
-" todo
 
 " Find Buffers: {{{3
-" b - to list buffers, B - to see all buffers
 nnoremap <space>B :<C-u>Unite -no-split buffer:!<cr>
 nnoremap <space>b :<C-u>Unite -no-split buffer<cr>
 
 " Find In Buffers: {{{3
 nnoremap <space>a :<C-u>Unite -input=\v\c^(#+\|\=+\|\s*o\|\s*x) line<cr>
-
-" Find Accross Buffers: {{{3
-" next/previous match from last search
-nnoremap <space>n :UniteNext<cr><esc>zz
-nnoremap <space>N :UnitePrevious<cr><esc>zz
-
-" Grep inside a buffer: {{{3
-" filter lines in buffer
 nnoremap <space>l :<C-u>Unite -no-split -start-insert line<cr>
-
-
-" Some ACTION: shortcuts
-" - today's actions
 nnoremap <space>d :exec 'Unite -input='.strftime("%Y-%m-%d").' line'<cr>
-" - this month's actions
 nnoremap <space>m :exec 'Unite -input='.strftime("%Y-%m").' line'<cr>
-" - show headers (markdown as well as restructured text) and open actions
 nnoremap <space>o :exec 'Unite -input=\v\c^(#+\|\=+\|\s*o) line'<cr>
-
-
 
 " Colors: {{{2
 " ------------
@@ -718,7 +744,8 @@ let g:Tlist_GainFocus_On_ToggleOpen = 1
 
 " Utl:
 " https://github.com/vim-scripts/utl.vim.git
-" goto url under cursor
+" gx goto url under cursor / open url in browser
+" gf goto file under cursor
 
 " Ag:
 " --------------------------------------------------------------
@@ -806,26 +833,55 @@ let g:Tlist_GainFocus_On_ToggleOpen = 1
 " Tabular:
 " https://github.com/godlygeek/tabular.git
 
-" OmniCompletion: {{{2
-let g:acp_enableAtStartup=0
-let g:neocomplete#enable_at_startup=1
-let g:neocomplete#enable_smart_case=1
-let g:neocomplete#sources#syntax#min_keyword_length=3
-let g:neocomplete#lock_buffer_name_pattern='\*ku\*'
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
+" Completion: {{{2
+" -----------
+" Use deoplete (NVIM only).
+if has("nvim")
+  " NeoComplete (VIM only)
+  let g:deoplete#enable_at_startup = 1
+else
 
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
+  let g:acp_enableAtStartup=0
+  let g:neocomplete#enable_at_startup=1
+  let g:neocomplete#enable_smart_case=1
+  let g:neocomplete#sources#syntax#min_keyword_length=3
+  let g:neocomplete#lock_buffer_name_pattern='\*ku\*'
+  let g:neocomplete#sources#dictionary#dictionaries = {
+      \ 'default' : '',
+      \ 'vimshell' : $HOME.'/.vimshell_hist',
+      \ 'scheme' : $HOME.'/.gosh_completions'
+          \ }
+
+  if !exists('g:neocomplete#keyword_patterns')
+      let g:neocomplete#keyword_patterns = {}
+  endif
+  let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+  " Enable heavy omni completion.
+  if !exists('g:neocomplete#sources#omni#input_patterns')
+    let g:neocomplete#sources#omni#input_patterns = {}
+  endif
+  "let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+  "let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+  "let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+  " For perlomni.vim setting.
+  " https://github.com/c9s/perlomni.vim
+  let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+  " AutoComplPop like behavior.
+  "let g:neocomplete#enable_auto_select = 1
+
+  "let g:neocomplete#enable_auto_select = 1
+  "let g:neocomplete#disable_auto_complete = 1
+
+  " Plugin key-mappings.
+  inoremap <expr><C-b> neocomplete#undo_completion()
+  inoremap <expr><C-l> neocomplete#complete_common_string()
+  inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+  inoremap <expr><BS>  neocomplete#smart_close_popup()."\<C-h>"
+
 endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-" Plugin key-mappings.
-inoremap <expr><C-b>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
 
 " Recommended key-mappings.
 " <CR>: close popup and save indent.
@@ -838,18 +894,12 @@ endfunction
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 " Close popup by <Space>.
 "inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
 
-" AutoComplPop like behavior.
-"let g:neocomplete#enable_auto_select = 1
 
 " Shell like behavior(not recommended).
 "set completeopt+=longest
-"let g:neocomplete#enable_auto_select = 1
-"let g:neocomplete#disable_auto_complete = 1
 "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
 
 " Enable omni completion.
@@ -859,17 +909,6 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
 
 " Programming: {{{2
