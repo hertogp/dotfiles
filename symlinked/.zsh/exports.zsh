@@ -1,5 +1,11 @@
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/pdh/bin:/home/pdh/.cabal/bin"
 
+# PYTHON
+# - for interactive python REPL shell
+export PYTHONSTARTUP=$HOME/.pythonstartup.py
+# - include our own ~/lib/python to the search path
+export PYTHONPATH=$HOME/lib/python
+
 # Setup terminal, and turn on colors
 export TERM=xterm-256color
 export CLICOLOR=1
