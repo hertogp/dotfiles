@@ -839,7 +839,7 @@ let g:Tlist_GainFocus_On_ToggleOpen = 1
 
 " Tgpg:
 " https://github.com/tomtom/tgpg_vim.git
-" see also after/ftplugin/asciidoc.vim for password vault
+" see also after/ftplugin/asciidoc.vim for pwd vault
 
 " Tabular:
 " https://github.com/godlygeek/tabular.git
