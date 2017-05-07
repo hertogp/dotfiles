@@ -557,8 +557,19 @@ nnoremap <space>r :<C-u>UniteWithBufferDir -no-split -start-insert file_rec/asyn
 nnoremap <space>R :<C-u>Unite -no-split -input= -start-insert file_rec/async:!<cr>
 
 " Grep Files: {{{3
+" see https://github.com/Shougo/unite.vim/issues/280
+" grep:arg1:arg2:arg3
+" - arg1 = file/directory
+" - arg2 = ag options (or other grep command)
+" - arg3 = pattern
 nnoremap <space>g :<C-u>Unite -no-split -silent -buffer-name=unite-ag grep:.<cr>
 nnoremap <space>G :<C-u>Unite -no-split -silent -buffer-name=unite-ag grep:.<cr>
+
+" search tags lines in markdown files
+" - <space>t for tag-lines under current dir
+" - <space>T for tag-lines under /home/www/notes
+nnoremap <space>t :<C-u>Unite -no-split -silent -buffer-name=unite-ag -start-insert grep:.:--markdown:^(tags\|title\|subject\|categories)<cr>
+nnoremap <space>T :<C-u>Unite -no-split -silent -buffer-name=unite-ag -start-insert grep:/home/www/notes:--markdown:^(tags\|title\|subject\|categories)<cr>
 
 " Find Buffers: {{{3
 nnoremap <space>B :<C-u>Unite -no-split buffer:!<cr>
