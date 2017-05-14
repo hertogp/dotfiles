@@ -478,7 +478,7 @@ nnoremap <silent> <leader>l :BufExplorer<CR>
 au FileType python nnoremap <f1> <esc>:normal <leader>pW<CR>
 
 " Pep8:
-"let g:pep8_map=',8'
+let g:pep8_map=",8"
 " Pylint:
 au FileType python map <leader>m :make<cr><cr><cr>:cw<cr>
 
@@ -581,6 +581,10 @@ nnoremap <space>l :<C-u>Unite -no-split -start-insert line<cr>
 nnoremap <space>d :exec 'Unite -input='.strftime("%Y-%m-%d").' line'<cr>
 nnoremap <space>m :exec 'Unite -input='.strftime("%Y-%m").' line'<cr>
 nnoremap <space>o :exec 'Unite -input=\v\c^(#+\|\=+\|\s*o) line'<cr>
+
+" Comment Stuff: {{{3
+vnoremap ,b !boxes -d peek<CR><S-V>}k:!boxes -d pound-cmt<CR>}
+vnoremap ,B !boxes -d peek<CR>}
 
 " Colors: {{{2
 " ------------
@@ -957,7 +961,7 @@ let g:syntastic_ignore_files = ['\v^/usr']    " don't check these
 " https://github.com/hdima/python-syntax.git
 " - is gitrepo for http://www.vim.org/scripts/script.php?script_id=790
 let python_highlight_all = 1
-let python_version_2 = 1
+let python_version_2 = 0
 
 " Pep8:
 " + sudo apt-get install pep8
@@ -969,7 +973,7 @@ let g:pep8_map='<leader>8'
 " https://github.com/fs111/pydoc.vim
 let g:pydoc_open_cmd = 'botright vsplit'   " help to the right
 let g:pydoc_window_lines=1.0               " new tab, so full window
-let g:pydoc_use_drop=1                     " re-use an help tab/window
+let g:pydoc_use_drop=1                     " re-use a help tab/window
 
 au FileType python set omnifunc=pythoncomplete#Complete
 let g:SuperTabDefaultComletionType="context"
