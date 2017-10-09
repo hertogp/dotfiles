@@ -1,8 +1,6 @@
 alias l='ls -laph --color=auto'
 alias lt='tree -aI .git'
 alias lr='ls -thralp --color=auto'
-alias touchpad_off='xinput set-prop $(xinput list | grep -i glide | egrep -o id=[[:digit:]]+ | egrep -o [[:digit:]]+) "Device Enabled" 0'
-alias touchpad_on='xinput set-prop $(xinput list | grep -i glide | egrep -o id=[[:digit:]]+ | egrep -o [[:digit:]]+) "Device Enabled" 1'
 alias ls.usage='sudo du -hsc $(ls -lpA  | awk '"'"'/^d/ {print $9}'"'"')'
 alias ls.system='sudo inxi -c 29 -b'
 alias ls.sockets='sudo netstat -ntulp'

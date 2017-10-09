@@ -101,10 +101,10 @@ Plugin 'https://github.com/tpope/vim-dispatch.git'     " spawn processes
 Plugin 'https://github.com/tomtom/tgpg_vim.git'  " used in pw <vault>
 Plugin 'https://github.com/godlygeek/tabular.git'                 " --?-- (infrequently used ...)
 Plugin 'https://github.com/edsono/vim-matchit.git'
-" Ruby: {{{3
-Plugin 'https://github.com/vim-ruby/vim-ruby.git'                 " ruby support
-Plugin 'https://github.com/kmdsbng/vim-ruby-eval.git'
 Plugin 'https://github.com/scrooloose/syntastic.git'
+" Ruby: {{{3
+" Plugin 'https://github.com/vim-ruby/vim-ruby.git'                 " ruby support
+" Plugin 'https://github.com/kmdsbng/vim-ruby-eval.git'
 " Plugin 'https://github.com/t9md/vim-ruby-xmpfilter.git'
 " Python: {{{3
 Plugin 'https://github.com/hdima/python-syntax.git'               " Python - syntax
@@ -300,6 +300,7 @@ nnoremap <leader>ev :edit $HOME/.vimrc<cr>
 nnoremap <leader>sv :source $HOME/.vimrc<cr>
 nnoremap <leader>ed :edit /home/www/dwark/tasks/dwark.txt<cr>
 nnoremap <leader>ew :edit /home/www/work/tasks/work.txt<cr>
+nnoremap <leader>n  :cn<cr>
 " escape to normal mode
 inoremap jj <ESC>
 " escape to normal mode and update
@@ -480,11 +481,11 @@ au FileType python nnoremap <f1> <esc>:normal <leader>pW<CR>
 " Pep8:
 let g:pep8_map=",8"
 " Pylint:
-au FileType python map <leader>m :make<cr><cr><cr>:cw<cr>
+au FileType python map <leader>m <esc>:make<cr><cr><cr>:cw<cr><cr>
 
 " Ack:
-" noremap <leader>G <esc>:Ack! 
-"nnoremap <leader>A AckGrep
+" noremap <leader>G <esc>:Ack!
+" nnoremap <leader>A AckGrep
 
 " Easy quit nofile-like windows
 augroup QuitNoFile
@@ -652,27 +653,26 @@ function! SL_git_info() abort
 endfunction
 
 
-set statusline=""                            " start out blank
-set statusline+=%2*                         " normal color for opening [
+set statusline=""                              " start out blank
+set statusline+=%2*                            " normal color for opening [
 set statusline+=%4*\                           " MODE color (changes on insert) 
-set statusline+=%{mode()==?'n'?'NORMAL':''}  " mode
+set statusline+=%{mode()==?'n'?'NORMAL':''}    " mode
 set statusline+=%{mode()==?'i'?'INSERT':''}
 set statusline+=%{mode()==?'v'?'VISUAL':''}
 set statusline+=%2*\                           " normal color ] [
-set statusline+=[%{toupper(&ft)}]      " * file type
+set statusline+=[%{toupper(&ft)}]              " * file type
 set statusline+=\ %{SyntasticStatuslineFlag()}
-set statusline+=%{SL_git_info()}       " current git repo name
-set statusline+=%2*\                       " - switch to User1 (see :hi)
-" rest of status flags & info
-set statusline+=%1*%{&modified?'+':''}      " * +  flag (no leading ,)
-set statusline+=%{&readonly?'!!':''}     " * !! flag (not 'RO')
-set statusline+=%*                       " - switch back to default colors
-set statusline+=\ #%n                    " * buffer number
-set statusline+=\ %F                     " * full filename
-set statusline+=%=                       " right align
-set statusline+=%l:%c                " line(Lines):column
-set statusline+=\ \ %02p%%               " at approx. perc through the file
-set statusline+=\ \ %{&encoding}           " * file encoding
+set statusline+=\ %{SL_git_info()}             " current git repo name
+set statusline+=%2*\                           " - switch to User1 (see :hi)
+set statusline+=%1*%{&modified?'+':''}         " * +  flag (no leading ,)
+set statusline+=%{&readonly?'!!':''}           " * !! flag (not 'RO')
+set statusline+=%*                             " - switch back to default colors
+set statusline+=\ #%n                          " * buffer number
+set statusline+=\ %F                           " * full filename
+set statusline+=%=                             " right align
+set statusline+=%l:%c                          " line(Lines):column
+set statusline+=\ \ %02p%%                     " at approx. perc through the file
+set statusline+=\ \ %{&encoding}               " * file encoding
 set statusline+=\ [%{&fileformat}]
 
 " Filetypes: {{{2
@@ -936,14 +936,17 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 " :Erros               -> opens location list
 let g:syntastic_always_populate_loc_list = 1  " use location list
 let g:syntastic_auto_loc_list = 0             " donot auto open loclist
-let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_open = 0             " no checks on open/save events
 let g:syntastic_check_on_wq = 0               " no check on quit
+let g:syntastic_cursor_column = 0             " only 1st error on line
 let g:syntastic_stl_format='%E{e%e}%B{|}%W{w%w}'
 let g:syntastic_error_symbol = "e"
 let g:syntastic_warning_symbol = "w"
 let g:syntastic_loc_list_height = 15          " make lots of mistakes
 let g:syntastic_ignore_files = ['\v^/usr']    " don't check these
+let g:syntastic_python_checkers = ['flake8']  " pylint is too slow
 " See ~/.pylintrc, and look for 'tmpdh' to see what changed
+" - <leader>m will 'make' the py program using pylint
 
 " Matchit:
 " - see also ftplugin/python_match.vim for py-specific matching
@@ -991,25 +994,26 @@ augroup PyLint
         "tstdir.py:E: 10,6: Undefined variable 'tundefd'
         "tstdir.py:C: 11,0:foo: Black listed name "foo"
 
-    "au FileType python set makeprg=pylint\ %:p\\\|sed\ '{/.:/\ !d;s/\ \\+/\ /;s/^/%:/}'
-    " also works: -> pylint tstdir.py  -rn | sed -n '{s/ \+/ /;s/^.:/tstdir.py:&/p}'
+    au FileType python set makeprg=pylint\ -rn\ %:p\\\|sed\ -n\ '{s/\\([:,]\\)\\s\\+/\\1/g;s/,0:/,1:/;s/^.:/%:\&/p}'\\\|sort
+    " - %:p is full pathname of the file
+    " - s/\\([:,])\\)\\s\\+/\\1
+    "   substitues :, followed by spaces to itself (: or ,)
+    " ~ s/^C:/Z:/  (removed for now)
+    "   swap error type C(onvention) for Z so conventions goto the bottom in qf-list
+    " - s/,0:/,1/
+    "    replace column 0 for column 1 (vim columns start at 1, not 0)
+    " - s/^.:/%:gs?/?\\\\/?:\&/p
+    "   the %:gs?/?\\\\/? part inserts the filename with *all* /'s xlated to \/'s
+    "   so s/^./<fname>:\&/p
+    "   - prepends the filename and ':' followed by the entire line (\&)
+    "   - the last /p actually prints the matched/reformed line
+    "   => now simplified to s/^.:/%:\&/p
+    " sed notes
     " sed allows '{stmt;stmt;..}' as a oneliner (instead of -e stmt -e stmt)
-    " sed -n 's/pat/&/p' file  <-prints matched lines, & substitutes (itself)
-    " sed -n '{s/ \+/ /;s/^.:/<file>:&/p}'
-    "  - 1st replace repeated spaces with 1 space
-    "  - 2nd prepend <file> to line if it starts with a letter followed by :
-    "  - print results of 2nd statement
-    "au FileType python set makeprg=pylint\ %:p\\\|sed\ -n\ '{s/\ \\+/\ /;s/^.:/%:\&/p}'
-    "au FileType python set efm=%f:%t:\ %l\\,%c:%m
-    au FileType python set makeprg=pylint\ -rn\ %:p\\\|sed\ -n\ '{s/,0:/,1:/;s/^C:/Z:/;s/^.:/%:gs?/?\\\\/?:\&/p}'\\\|sort
-    " replace C(onvention) with Z so it sorts to the bottom: CREWF -> EFRWZ
-    " Also replace column 0 with column 1 (nicer qf output)
-    " prepend filename to each line if 2nd char is ':'
-    " - %:gs?/?\\\\/? makes vim replace all /'s with \/'s in filename.
-    "   so sed sees pathsep's as text rather than rgx sep's.
     " sed -n '/rgx/p' only prints lines matching rgx
     " sed -n 's/rgx/>>:&/p' does the same, prepends >>: to matched part
-    au FileType python set efm=%f:%t:\ %#%l\\,%c:%m
+    " -- org --au FileType python set efm=%f:%t:\ %#%l\\,%c:%m
+    au FileType python set efm=%f:%t:%l\\,%c:%m
     " \ %# deals with repeated spaces
     " \\, ensure comma is matched (otherwise vim sees 2 rgxs)
 augroup end
@@ -1031,9 +1035,9 @@ augroup end
 " $ ./install.sh --clang-completer --omnisharp-completer
 
 " YouCompleteMe: {{{2
-let g:ycm_always_populate_location_list = 1
-let g:ycm_autoclose_preview_window_after_completion=1
-nnoremap <leader>jg :YcmCompleter GoToDefinitionElseDeclaration<CR>
+" let g:ycm_always_populate_location_list = 1
+" let g:ycm_autoclose_preview_window_after_completion=1
+" nnoremap <leader>jg :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 
 "
@@ -1056,7 +1060,7 @@ let g:pandoc#syntax#style#underline_special = 0
 let g:pandoc#hypertext#preferred_alternate="mkd"
 let g:pandoc#syntax#codeblocks#embeds#use = 1
 
-let g:pandoc#syntax#codeblocks#embeds#langs = ["python","bash=sh","c","sh", "python"]
+let g:pandoc#syntax#codeblocks#embeds#langs = ["python","bash=sh","c","sh"]
 let g:pandoc#spell#enabled = 0                       " default is on .. wtf??
 let g:pandoc#modules#disabled = ["folding"]          " got Voom for that
 let g:pandoc#command#custom_open = "Pandoc_xdg_open" " How Pandoc! opens files
@@ -1192,4 +1196,4 @@ function! TabCmd(cmd)
   endif
   nnoremap <buffer><silent>q :<c-u>q<cr><c-w>p
 endfunction
-command! -nargs=+ -complete=command Vshow call TabCmd(<q-args>)
+command! -nargs=+ -complete=command Show call TabCmd(<q-args>)

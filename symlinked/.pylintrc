@@ -118,7 +118,8 @@ inlinevar-rgx=[A-Za-z_][A-Za-z0-9_]*$
 # - f(ile), o(bject), p(ath), k(ey),v(al) in lists/dicts or simply x,y,z 
 # - e for exception handling
 # - rv for retval
-good-names=i,j,k,ex,Run,_,f,o,p,x,y,z,rv,k,v,m,n,e
+# - with pandas you use df(dataframe), mx(matrix) and sh(sheet) alot
+good-names=i,j,k,ex,Run,_,f,o,p,x,y,z,rv,k,v,m,n,e,s,args,df,sh,mx
 
 # Bad variable names which should always be refused, separated by a comma
 bad-names=foo,bar,baz,toto,tutu,tata
