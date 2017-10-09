@@ -148,6 +148,10 @@ export GLE_USRLIB=~/lib/gle
 GPG_TTY=`tty`
 export GPG_TTY
 
+# NVIM settings
+# - nvim sends Esc 2q and Esc 6q to which xcfe4-terminal just echo's
+export NVIM_TUI_ENABLE_CURSOR_SHAPE=0
+
 # use solarized dircolors
 eval `dircolors ~/.dir_colors`
 
