@@ -478,7 +478,7 @@ nnoremap <silent> <leader>l :BufExplorer<CR>
 au FileType python nnoremap <f1> <esc>:normal <leader>pW<CR>
 
 " Pep8:
-"let g:pep8_map=',8'
+let g:pep8_map=",8"
 " Pylint:
 au FileType python map <leader>m :make<cr><cr><cr>:cw<cr>
 
@@ -557,8 +557,19 @@ nnoremap <space>r :<C-u>UniteWithBufferDir -no-split -start-insert file_rec/asyn
 nnoremap <space>R :<C-u>Unite -no-split -input= -start-insert file_rec/async:!<cr>
 
 " Grep Files: {{{3
+" see https://github.com/Shougo/unite.vim/issues/280
+" grep:arg1:arg2:arg3
+" - arg1 = file/directory
+" - arg2 = ag options (or other grep command)
+" - arg3 = pattern
 nnoremap <space>g :<C-u>Unite -no-split -silent -buffer-name=unite-ag grep:.<cr>
 nnoremap <space>G :<C-u>Unite -no-split -silent -buffer-name=unite-ag grep:.<cr>
+
+" search tags lines in markdown files
+" - <space>t for tag-lines under current dir
+" - <space>T for tag-lines under /home/www/notes
+nnoremap <space>t :<C-u>Unite -no-split -silent -buffer-name=unite-ag -start-insert grep:.:--markdown:^(tags\|title\|subject\|categories)<cr>
+nnoremap <space>T :<C-u>Unite -no-split -silent -buffer-name=unite-ag -start-insert grep:/home/www/notes:--markdown:^(tags\|title\|subject\|categories)<cr>
 
 " Find Buffers: {{{3
 nnoremap <space>B :<C-u>Unite -no-split buffer:!<cr>
@@ -570,6 +581,10 @@ nnoremap <space>l :<C-u>Unite -no-split -start-insert line<cr>
 nnoremap <space>d :exec 'Unite -input='.strftime("%Y-%m-%d").' line'<cr>
 nnoremap <space>m :exec 'Unite -input='.strftime("%Y-%m").' line'<cr>
 nnoremap <space>o :exec 'Unite -input=\v\c^(#+\|\=+\|\s*o) line'<cr>
+
+" Comment Stuff: {{{3
+vnoremap ,b !boxes -d peek<CR><S-V>}k:!boxes -d pound-cmt<CR>}
+vnoremap ,B !boxes -d peek<CR>}
 
 " Colors: {{{2
 " ------------
@@ -828,7 +843,7 @@ let g:Tlist_GainFocus_On_ToggleOpen = 1
 
 " Tgpg:
 " https://github.com/tomtom/tgpg_vim.git
-" see also after/ftplugin/asciidoc.vim for password vault
+" see also after/ftplugin/asciidoc.vim for pwd vault
 
 " Tabular:
 " https://github.com/godlygeek/tabular.git
@@ -946,7 +961,7 @@ let g:syntastic_ignore_files = ['\v^/usr']    " don't check these
 " https://github.com/hdima/python-syntax.git
 " - is gitrepo for http://www.vim.org/scripts/script.php?script_id=790
 let python_highlight_all = 1
-let python_version_2 = 1
+let python_version_2 = 0
 
 " Pep8:
 " + sudo apt-get install pep8
@@ -958,7 +973,7 @@ let g:pep8_map='<leader>8'
 " https://github.com/fs111/pydoc.vim
 let g:pydoc_open_cmd = 'botright vsplit'   " help to the right
 let g:pydoc_window_lines=1.0               " new tab, so full window
-let g:pydoc_use_drop=1                     " re-use an help tab/window
+let g:pydoc_use_drop=1                     " re-use a help tab/window
 
 au FileType python set omnifunc=pythoncomplete#Complete
 let g:SuperTabDefaultComletionType="context"
