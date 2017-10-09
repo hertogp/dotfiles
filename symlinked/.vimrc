@@ -1067,6 +1067,12 @@ augroup auPandoc
     autocmd FileType pandoc compiler pandoc
 augroup END
 
+augroup auDot
+  au!
+  autocmd FileType dot set formatoptions="want"
+    autocmd FileType dot nnoremap <buffer><F4> <esc>:silent \|call vimproc#system_bg("dot -Tpng ".expand("%")."\| display")<cr>
+augroup END
+
 " Colors: {{{2
 " ------------
 " SpaceGray:
