@@ -994,7 +994,7 @@ augroup PyLint
         "tstdir.py:E: 10,6: Undefined variable 'tundefd'
         "tstdir.py:C: 11,0:foo: Black listed name "foo"
 
-    au FileType python set makeprg=pylint\ -rn\ %:p\\\|sed\ -n\ '{s/\\([:,]\\)\\s\\+/\\1/g;s/,0:/,1:/;s/^.:/%:\&/p}'\\\|sort
+    au FileType python set makeprg=pylint3\ -rn\ %:p\\\|sed\ -n\ '{s/\\([:,]\\)\\s\\+/\\1/g;s/,0:/,1:/;s/^.:/%:\&/p}'\\\|sort
     " - %:p is full pathname of the file
     " - s/\\([:,])\\)\\s\\+/\\1
     "   substitues :, followed by spaces to itself (: or ,)
