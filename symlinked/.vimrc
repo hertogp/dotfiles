@@ -989,33 +989,10 @@ set completeopt=menuone,longest,preview
 " [%,]% moves across blocks
 "
 augroup PyLint
+    " pylint3 error output format string: see: https://docs.pylint.org/en/1.6.0/output.html
     au!
-        "tstdir.py:E:  2,6: Undefined variable 'me'
-        "tstdir.py:E: 10,6: Undefined variable 'tundefd'
-        "tstdir.py:C: 11,0:foo: Black listed name "foo"
-
-    au FileType python set makeprg=pylint\ -rn\ %:p\\\|sed\ -n\ '{s/\\([:,]\\)\\s\\+/\\1/g;s/,0:/,1:/;s/^.:/%:\&/p}'\\\|sort
-    " - %:p is full pathname of the file
-    " - s/\\([:,])\\)\\s\\+/\\1
-    "   substitues :, followed by spaces to itself (: or ,)
-    " ~ s/^C:/Z:/  (removed for now)
-    "   swap error type C(onvention) for Z so conventions goto the bottom in qf-list
-    " - s/,0:/,1/
-    "    replace column 0 for column 1 (vim columns start at 1, not 0)
-    " - s/^.:/%:gs?/?\\\\/?:\&/p
-    "   the %:gs?/?\\\\/? part inserts the filename with *all* /'s xlated to \/'s
-    "   so s/^./<fname>:\&/p
-    "   - prepends the filename and ':' followed by the entire line (\&)
-    "   - the last /p actually prints the matched/reformed line
-    "   => now simplified to s/^.:/%:\&/p
-    " sed notes
-    " sed allows '{stmt;stmt;..}' as a oneliner (instead of -e stmt -e stmt)
-    " sed -n '/rgx/p' only prints lines matching rgx
-    " sed -n 's/rgx/>>:&/p' does the same, prepends >>: to matched part
-    " -- org --au FileType python set efm=%f:%t:\ %#%l\\,%c:%m
-    au FileType python set efm=%f:%t:%l\\,%c:%m
-    " \ %# deals with repeated spaces
-    " \\, ensure comma is matched (otherwise vim sees 2 rgxs)
+    au FileType python set makeprg=pylint3\ -rn\ -ftext\ --msg-template='{path}:{msg_id}:{line}:{column}:{msg}'\ %:p\ \\\|\ grep\ \-Ev\ '^\\*'
+    au FileType python set efm=%f:%t%n:%l:%c:%m,*%#\ %#%m
 augroup end
 
 " "Go Lang:
