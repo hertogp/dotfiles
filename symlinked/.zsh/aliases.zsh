@@ -61,6 +61,7 @@ alias gma='git commit -am'
 alias gb='git branch'
 #alias gf='git reflog'
 alias gv='git log --pretty=format:'%s' | cut -d " " -f 1,2 | sort | uniq -c | sort -nr'
+alias git-reset='git fetch origin master && git reset --hard FETCH_HEAD && git clean -df'
 
 # curiosities
 # gu shows a list of all developers and the number of commits they've made
