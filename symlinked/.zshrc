@@ -11,5 +11,5 @@ source ~/.zsh/bindkeys.zsh
 source ~/.zsh/functions.zsh
 source ~/.zsh/history.zsh
 source ~/.zsh/zsh_hooks.zsh
-source  ${HOME}/dotfiles/z/z.sh
+# source  ${HOME}/dotfiles/z/z.sh
 # echo ".zshrc `date +%Y-%m-%d,%H:%M:%S` sourced." >> ~/log/shell.log

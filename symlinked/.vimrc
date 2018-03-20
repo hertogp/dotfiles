@@ -100,7 +100,8 @@ Plugin 'https://github.com/tpope/vim-dispatch.git'     " spawn processes
 "Plugin 'https://github.com/Lokaltog/vim-easymotion.git'           " --?-- 
 Plugin 'https://github.com/tomtom/tgpg_vim.git'  " used in pw <vault>
 Plugin 'https://github.com/godlygeek/tabular.git'                 " --?-- (infrequently used ...)
-Plugin 'https://github.com/edsono/vim-matchit.git'
+Plugin-'https://github.com/andymass/vim-matchup.git'   " replaces vim-matchit.git
+" Plugin 'https://github.com/edsono/vim-matchit.git'
 Plugin 'https://github.com/scrooloose/syntastic.git'
 " Ruby: {{{3
 " Plugin 'https://github.com/vim-ruby/vim-ruby.git'                 " ruby support
@@ -265,7 +266,7 @@ au FileType vim set sts=2 sw=2 tabstop=2
 " - vim.eval("expand('<sfile>')")
 "    `-> also gives /home/<usr>/.vimrc (ie the symlink)
 
-python <<EOF
+py3 <<EOF
 import sys
 import os
 DOTVIMDIR = os.path.expanduser('~/.vim')
@@ -948,7 +949,7 @@ let g:syntastic_python_checkers = ['flake8']  " pylint is too slow
 " See ~/.pylintrc, and look for 'tmpdh' to see what changed
 " - <leader>m will 'make' the py program using pylint
 
-" Matchit:
+" Match-up superseeding matchit:
 " - see also ftplugin/python_match.vim for py-specific matching
 " - out of the box, it doesn't support Python in any way
 " - you can let b:match_words = 'if:else' to add match words to '%' behaviour
