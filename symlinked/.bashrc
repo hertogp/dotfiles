@@ -179,3 +179,7 @@ setxkbmap -rules evdev -model evdev -layout us -variant altgr-intl
 # italics.  Make sure the terminal is using a font that has italics builtin.
 ITALIC="[3mitalic?[23m"
 
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
