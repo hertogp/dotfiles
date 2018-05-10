@@ -99,8 +99,10 @@ Plugin 'https://github.com/tpope/vim-dispatch.git'     " spawn processes
 "Plugin vim-sneak " lighter alternative to easymotion? --?--
 "Plugin 'https://github.com/Lokaltog/vim-easymotion.git'           " --?-- 
 Plugin 'https://github.com/tomtom/tgpg_vim.git'  " used in pw <vault>
-Plugin 'https://github.com/godlygeek/tabular.git'                 " --?-- (infrequently used ...)
-Plugin 'https://github.com/edsono/vim-matchit.git'
+Plugin 'https://github.com/godlygeek/tabular.git'
+
+Plugin 'https://github.com/andymass/vim-matchup.git'   " replaces vim-matchit.git
+" Plugin 'https://github.com/edsono/vim-matchit.git'
 Plugin 'https://github.com/scrooloose/syntastic.git'
 " Ruby: {{{3
 " Plugin 'https://github.com/vim-ruby/vim-ruby.git'                 " ruby support
@@ -121,6 +123,8 @@ Plugin 'https://github.com/1995eaton/vim-better-javascript-completion.git'
 "   If updated, may require recompiling:
 "   cd ~/.vim/bundle/YouCompleteMe/
 "   sudo ./install.sh --clang-completer
+" HTML: {{{3
+Plugin 'https://github.com/mattn/emmet-vim.git'                   ".class<tab>
 " Pandoc: {{{3
 Plugin 'https://github.com/vim-pandoc/vim-pandoc.git'                 " Pandoc
 Plugin 'https://github.com/vim-pandoc/vim-pandoc-syntax.git'
@@ -216,6 +220,12 @@ let g:unite_source_outline_highlight = {}
 " VimFiler:
 " https://github.com/Shougo/vimfiler.vim.git
 
+" VimEmmet: {{{3
+" https://github.com/mattn/emmet-vim
+let g:user_emmet_install_global=0
+let g:user_emmet_leader_key='<c-e>'     " <c-e>, will trigger expansion
+autocmd FileType html,css EmmetInstall
+
 " Vim Configuration {{{1
 " ==============================================================
 " Settings {{{2
@@ -269,7 +279,7 @@ set guicursor=
 " - vim.eval("expand('<sfile>')")
 "    `-> also gives /home/<usr>/.vimrc (ie the symlink)
 
-python <<EOF
+py3 <<EOF
 import sys
 import os
 DOTVIMDIR = os.path.expanduser('~/.vim')
@@ -302,9 +312,12 @@ nnoremap L :<c-u>tabn<cr>
 nnoremap U <c-r>
 nnoremap <leader>ev :edit $HOME/.vimrc<cr>
 nnoremap <leader>sv :source $HOME/.vimrc<cr>
-nnoremap <leader>ed :edit /home/www/dwark/tasks/dwark.txt<cr>
-nnoremap <leader>ew :edit /home/www/work/tasks/work.txt<cr>
+nnoremap <leader>ed :edit /home/dta/notes/docs/breda/dwark.md<cr>
+nnoremap <leader>ew :edit /home/dta/notes/work/tasks.md<cr>
 nnoremap <leader>n  :cn<cr>
+" aligns table using Tabular on ' | '-character (need the spaces!)
+" - | symbols should be separated from text with 1+ spaces!
+nnoremap <leader>t  :call TabularAlign()<cr>
 " escape to normal mode
 inoremap jj <ESC>
 " escape to normal mode and update
@@ -583,6 +596,9 @@ nnoremap <space>b :<C-u>Unite -no-split buffer<cr>
 " Find In Buffers: {{{3
 nnoremap <space>a :<C-u>Unite -input=\v\c^(#+\|\=+\|\s*o\|\s*x) line<cr>
 nnoremap <space>l :<C-u>Unite -no-split -start-insert line<cr>
+nnoremap <space>w :<C-u>UniteWithCursorWord line<cr>
+nnoremap <space>W :exec 'Unite -input='.expand("<cWORD>").' line'<cr>
+
 nnoremap <space>d :exec 'Unite -input='.strftime("%Y-%m-%d").' line'<cr>
 nnoremap <space>m :exec 'Unite -input='.strftime("%Y-%m").' line'<cr>
 nnoremap <space>o :exec 'Unite -input=\v\c^(#+\|\=+\|\s*o) line'<cr>
@@ -851,6 +867,19 @@ let g:Tlist_GainFocus_On_ToggleOpen = 1
 
 " Tabular:
 " https://github.com/godlygeek/tabular.git
+" https://gist.github.com/tpope/287147
+inoremap <silent> <Bar>   <Bar><Esc>:call TabularAlign()<CR>a
+
+function! TabularAlign()
+  let p = '^\s*|\s.*\s|\s*$'
+  if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
+    let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
+    let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
+    Tabularize/|/l1
+    normal! 0
+    call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
+  endif
+endfunction
 
 " Completion: {{{2
 " -----------
@@ -962,7 +991,7 @@ let g:syntastic_python_checkers = ['flake8']  " pylint is too slow
 " See ~/.pylintrc, and look for 'tmpdh' to see what changed
 " - <leader>m will 'make' the py program using pylint
 
-" Matchit:
+" Match-up superseeding matchit:
 " - see also ftplugin/python_match.vim for py-specific matching
 " - out of the box, it doesn't support Python in any way
 " - you can let b:match_words = 'if:else' to add match words to '%' behaviour
