@@ -116,6 +116,7 @@ Plugin 'https://github.com/vim-scripts/pep8.git'                  " Python - pol
 Plugin 'https://github.com/yegle/python_match.git'                " Python - motions %,[%,]%,g%
 " Javascript {{{3
 Plugin 'https://github.com/1995eaton/vim-better-javascript-completion.git'
+Plugin 'https://github.com/ternjs/tern_for_vim.git'
 
 " Completion: {{{3
 " - now done using Shougo's Unite
@@ -268,6 +269,7 @@ set listchars=tab:>~,trail:-,precedes:<,extends:>  "show tabs and stuff.
 set splitright               " new vsplit window to the right of curr window
 
 au FileType vim set sts=2 sw=2 tabstop=2
+" prevent weird chars in statusline while using nvim
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 0
 set guicursor=
 " py.path += ~/.vim/pylib {{{2
@@ -279,7 +281,7 @@ set guicursor=
 " - vim.eval("expand('<sfile>')")
 "    `-> also gives /home/<usr>/.vimrc (ie the symlink)
 
-py3 <<EOF
+python <<EOF
 import sys
 import os
 DOTVIMDIR = os.path.expanduser('~/.vim')
@@ -914,14 +916,14 @@ else
   "let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
   "let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 
-  " JAVASCRIPT
+  " JavaScript JS
   " https://davidosomething.com/blog/vim-for-javascript/
   " https://github.com/Shougo/neocomplete.vim
   autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
   let g:neocomplete#sources#omni#functions.javascript = [
-        \   'jspc#omni',
         \   'tern#Complete',
         \ ]
+"        \   'jspc#omni',
 
   " PERL For perlomni.vim setting.
   " https://github.com/c9s/perlomni.vim
