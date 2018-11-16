@@ -120,6 +120,8 @@ Plugin 'https://github.com/yegle/python_match.git'                " Python - mot
 "   If updated, may require recompiling:
 "   cd ~/.vim/bundle/YouCompleteMe/
 "   sudo ./install.sh --clang-completer
+" JAVASCRIPT: {{{3
+Plugin 'https://github.com/pangloss/vim-javascript.git'     "syntax & indent
 " HTML: {{{3
 Plugin 'https://github.com/mattn/emmet-vim.git'                   ".class<tab>
 " Pandoc: {{{3
@@ -223,6 +225,10 @@ let g:user_emmet_install_global=0
 let g:user_emmet_leader_key='<c-e>'     " <c-e>, will trigger expansion
 autocmd FileType html,css EmmetInstall
 
+" JAVASCRIPT: {{{2
+let g:javascript_plugin_jsdoc = 1   " JSDOCS http://usejsdoc.org/
+
+
 " Vim Configuration {{{1
 " ==============================================================
 " Settings {{{2
@@ -318,7 +324,7 @@ nnoremap <leader>t  :call TabularAlign()<cr>
 inoremap jj <ESC>
 " escape to normal mode and update
 inoremap hh <ESC>:update<cr>
-" opposite of Shift-J (ie split lines instead of join lines)
+" Alt-j as opposite of Shift-J (ie split lines instead of join lines)
 " Alt key actually maps to \033 (type sed -n l, then Alt-j -> \033j
 " so an alternate mapping could be nnoremap <esc>[033j i
 nnoremap j i<esc>
@@ -493,7 +499,7 @@ au FileType python nnoremap <f1> <esc>:normal <leader>pW<CR>
 
 " Pep8:
 let g:pep8_map=",8"
-" Pylint:
+" Pylint: make python file open quickfix window
 au FileType python map <leader>m <esc>:make<cr><cr><cr>:cw<cr><cr>
 
 " Ack:
@@ -808,27 +814,6 @@ let g:Tlist_GainFocus_On_ToggleOpen = 1
 "let g:fuf_enumeratingLimit = 450
 "let g:fuf_mrufile_maxItem = 400
 "let g:fuf_mrucmd_maxItem = 400
-
-" CtrlP:
-" :CtrlP [starting-directory] -> find file mode.
-" :CtrlPBuffer                -> find buffer mode.
-" :CtrlPMRU                   -> find MRU file mode
-" :CtrlPMixed                 -> search in (Files,Buffers,MRU-files) at once.
-" :help ctrlp-mappings        -> more mapping help (or submit ? in CtrlP mode)
-" :help ctrlp-commands        -> more help on commands
-" :help ctrlp-extensions      -> for help other commands.
-"
-" Once CtrlP is open:
-" <F5>                        - purge cache for curdir and rebuild it
-" <c-f>, <c-b>                - cycle between file/buffer modes.
-" <c-d>                       - switch to filename only search (not full path)
-" <c-r>                       - switch to regexp mode.
-" <c-j>, <c-k>,<up/down>      - navigate the result list.
-" <c-t>,<c-v>,<c-x>           - open the selected entry in a new tab/split.
-" <c-n>,<c-p>                 - select next/previous string in prompt's history
-" <c-y>                       - create new file and its parent directories
-" <c-z>                       - mark/unmark multiple files and 
-" <c-o>                       - to open them.
 
 " IncSearch: {{{2
 " https://github.com/haya14busa/incsearch.vim
