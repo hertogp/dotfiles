@@ -287,7 +287,7 @@ set guicursor=
 " - vim.eval("expand('<sfile>')")
 "    `-> also gives /home/<usr>/.vimrc (ie the symlink)
 
-python <<EOF
+python3 <<EOF
 import sys
 import os
 DOTVIMDIR = os.path.expanduser('~/.vim')
