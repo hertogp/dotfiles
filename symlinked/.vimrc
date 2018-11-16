@@ -114,6 +114,10 @@ Plugin 'https://github.com/hynek/vim-python-pep8-indent'          " Python - ind
 Plugin 'https://github.com/fs111/pydoc.vim'                       " Python - help
 Plugin 'https://github.com/vim-scripts/pep8.git'                  " Python - political correctness
 Plugin 'https://github.com/yegle/python_match.git'                " Python - motions %,[%,]%,g%
+" Javascript {{{3
+Plugin 'https://github.com/1995eaton/vim-better-javascript-completion.git'
+Plugin 'https://github.com/ternjs/tern_for_vim.git'
+
 " Completion: {{{3
 " - now done using Shougo's Unite
 " Plugin 'https://github.com/Valloric/YouCompleteMe'                " Completion
@@ -271,7 +275,9 @@ set listchars=tab:>~,trail:-,precedes:<,extends:>  "show tabs and stuff.
 set splitright               " new vsplit window to the right of curr window
 
 au FileType vim set sts=2 sw=2 tabstop=2
-
+" prevent weird chars in statusline while using nvim
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 0
+set guicursor=
 " py.path += ~/.vim/pylib {{{2
 " ----------------------------
 " - see also /usr/share/vim/vim7<x>/ftplugin/python.vim
@@ -281,7 +287,7 @@ au FileType vim set sts=2 sw=2 tabstop=2
 " - vim.eval("expand('<sfile>')")
 "    `-> also gives /home/<usr>/.vimrc (ie the symlink)
 
-py3 <<EOF
+python <<EOF
 import sys
 import os
 DOTVIMDIR = os.path.expanduser('~/.vim')
@@ -881,6 +887,7 @@ else
       \ 'scheme' : $HOME.'/.gosh_completions'
           \ }
 
+  let g:neocomplete#sources#omni#functions = {}
   if !exists('g:neocomplete#keyword_patterns')
       let g:neocomplete#keyword_patterns = {}
   endif
@@ -894,7 +901,16 @@ else
   "let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
   "let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 
-  " For perlomni.vim setting.
+  " JavaScript JS
+  " https://davidosomething.com/blog/vim-for-javascript/
+  " https://github.com/Shougo/neocomplete.vim
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  let g:neocomplete#sources#omni#functions.javascript = [
+        \   'tern#Complete',
+        \ ]
+"        \   'jspc#omni',
+
+  " PERL For perlomni.vim setting.
   " https://github.com/c9s/perlomni.vim
   let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
   " AutoComplPop like behavior.
