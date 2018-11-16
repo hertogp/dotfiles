@@ -4,8 +4,7 @@ Thanks to https://github.com/Gee-Bee/dotfiles.git
 
 ## new machine
 
-Put together to get some consistency across various
-machines running XUbuntu.
+Put together to get some consistency across various machines running XUbuntu.
 
 ```bash
 sudo apt-get install exuberant-ctags
