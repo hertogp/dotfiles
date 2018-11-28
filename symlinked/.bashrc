@@ -34,6 +34,28 @@ pw ()
     cd ${PREVDIR}
 }
 
+nvim()
+{
+    # osx users, use stty -g
+    local STTYOPTS="$(stty --save)"     # save terminal settings
+    stty stop '' -ixoff                 # turn off Xon/Xoff
+    command nvim "$@"
+    stty "$STTYOPTS"                    # restore terminal settings
+}
+
+NOTESDIR=~/notes
+nn ()
+{
+    # nn -- new note
+    PREVDIR=$(pwd)
+    cd ${NOTESDIR}
+    if [ -z "${1}" ]; then
+        nvim -c ":DeniteBufferDir -mode=insert -input=.md\  file/rec"
+    else
+        nvim "${1}.md"
+    fi
+    cd ${PREVDIR}
+}
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
