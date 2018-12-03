@@ -17,23 +17,6 @@ vim()
     stty "$STTYOPTS"                    # restore terminal settings
 }
 
-ACCTDIR=~/.acct
-pw ()
-{
-    PREVDIR=$(pwd)
-    cd "${ACCTDIR}"
-    # open with NERDTree if no filename was given
-    if [ -z "${1}" ]; then
-        echo "need file, e.g. one of:"
-        echo  $(ls *.gpg)
-        echo ""
-        echo "or a new filename .."
-    else
-        vim "${1}.gpg"
-    fi
-    cd ${PREVDIR}
-}
-
 nvim()
 {
     # osx users, use stty -g
@@ -43,7 +26,25 @@ nvim()
     stty "$STTYOPTS"                    # restore terminal settings
 }
 
+ACCTDIR=~/.acct
 NOTESDIR=~/notes
+
+pw ()
+{
+    # pw vault -> opens ~/.acct/vault.gpg
+    PREVDIR=$(pwd)
+    cd "${ACCTDIR}"
+    if [ -z "${1}" ]; then
+        echo "need file, e.g. one of:"
+        echo  $(ls *.gpg)
+        echo ""
+        echo "or a new filename .."
+    else
+        nvim "${1}.gpg"
+    fi
+    cd ${PREVDIR}
+}
+
 nn ()
 {
     # nn -- new note
