@@ -35,10 +35,15 @@ pw ()
     PREVDIR=$(pwd)
     cd "${ACCTDIR}"
     if [ -z "${1}" ]; then
-        echo "need file, e.g. one of:"
-        echo  $(ls *.gpg)
         echo ""
-        echo "or a new filename .."
+        echo "usage: pw <topic>"
+        echo "  current topics:"
+        for f in $(ls *.gpg); do
+            echo "   - ${f/.gpg/}"
+        done
+        echo ""
+        echo "or start a new topic."
+        echo ""
     else
         nvim "${1}.gpg"
     fi
@@ -47,7 +52,9 @@ pw ()
 
 nn ()
 {
-    # nn -- new note
+    # nn [<topic>]
+    # nn <topic> --> new/existing note-file
+    # nn         --> start nvim w/ list of existing note-files
     PREVDIR=$(pwd)
     cd ${NOTESDIR}
     if [ -z "${1}" ]; then
