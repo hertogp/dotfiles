@@ -1086,8 +1086,8 @@ augroup auPandoc
     "   makeprg is setup via vim-pandoc's compiler 
     "   see ~/.vim/after/compiler/pandoc.vim, where a proper makeprg is set
     "   this method does not need the ~/bin/mk.notes shell script.
-    " F3 - to compile the current markdown buffer to pdf
-    " F5 - to compile & preview the current markdown buffer in evince
+    " <S-F4> - to compile the current markdown buffer to pdf
+    " <F4> - to compile & preview the current markdown buffer in evince
     autocmd FileType pandoc nnoremap <buffer><S-F4> <esc>:silent make\|redraw!\|copen<cr>
     autocmd FileType pandoc nnoremap <buffer><F4> <esc>:silent make\|redraw!\|call vimproc#system_bg("evince ".expand("%:r").".pdf")<cr>
     autocmd FileType pandoc compiler pandoc

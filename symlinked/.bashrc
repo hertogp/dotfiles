@@ -57,11 +57,13 @@ nn ()
     # nn         --> start nvim w/ list of existing note-files
     PREVDIR=$(pwd)
     cd ${NOTESDIR}
-    if [ -z "${1}" ]; then
-        nvim -c ":DeniteBufferDir -mode=insert -input=.md\  file/rec"
-    else
-        nvim "${1}.md"
-    fi
+    nvim -c ":DeniteBufferDir -mode=insert -input=.md\ ${1}\  file/rec"
+    # if [ -z "${1}" ]; then
+    #     nvim -c ":DeniteBufferDir -mode=insert -input=.md\  file/rec"
+    # else
+    #     nvim -c ":DeniteBufferDir -mode=insert -input=.md\ ${1}\  file/rec"
+    #     # nvim "${1}.md"
+    # fi
     cd ${PREVDIR}
 }
 # If not running interactively, don't do anything
@@ -171,9 +173,19 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 fi
 
 # pdh stuff below
-export PATH=$PATH:/home/pdh/bin:/home/pdh/.cabal/bin
 export PYTHONPATH=${PYTHONPATH}:~/lib/python
 export GLE_USRLIB=~/lib/gle
+
+# using luarocks:
+export LUA_PATH='/home/pdh/.luarocks/share/lua/5.3/?.lua;/home/pdh/.luarocks/share/lua/5.3/?/init.lua;/usr/local/share/lua/5.3/?.lua;/usr/local/share/lua/5.3/?/init.lua;/usr/local/lib/lua/5.3/?.lua;/usr/local/lib/lua/5.3/?/init.lua;./?.lua;./?/init.lua'
+export LUA_CPATH='/home/pdh/.luarocks/lib/lua/5.3/?.so;/usr/local/lib/lua/5.3/?.so;/usr/local/lib/lua/5.3/loadall.so;./?.so'
+
+# add luarocks 'bin' as well.
+# - see also .profile which adds ~/bin to path as well
+export PATH=/home/pdh/.luarock/bin:$PATH
+
+
+
 # For gnupg.vim plugin, see http://www.vim.org/scripts/script.php?script_id=3645
 GPG_TTY=`tty`
 export GPG_TTY

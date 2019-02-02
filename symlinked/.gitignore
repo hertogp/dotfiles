@@ -1,13 +1,14 @@
 # directories to ignore
-bundle
-cache
-cache/**
+bundle/
+cache/
+venv/
 tmp/
 scr/
 .git
 
 # files to ignore
 # - backup files
+cache/**
 *~
 **/*~
 # - tmp vim swap files
