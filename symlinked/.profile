@@ -14,3 +14,4 @@ echo ".profile `date +%Y-%m-%d,%H:%M:%S` sourced (SHELL=$SHELL)." >> ~/log/shell
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
+

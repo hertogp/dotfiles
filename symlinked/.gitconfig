@@ -8,3 +8,7 @@
 	ls = log --oneline
 [push]
 	default = simple
+[pager]
+	branch = false
+[core]
+	pager = cat

@@ -57,7 +57,7 @@ nn ()
     # nn         --> start nvim w/ list of existing note-files
     PREVDIR=$(pwd)
     cd ${NOTESDIR}
-    nvim -c ":DeniteBufferDir -mode=insert -input=.md\ ${1}\  file/rec"
+    nvim -c ":DeniteBufferDir -start-filter -input=.md\ ${1}\  file/rec"
     # if [ -z "${1}" ]; then
     #     nvim -c ":DeniteBufferDir -mode=insert -input=.md\  file/rec"
     # else
@@ -151,6 +151,8 @@ alias lt='ls -ltr'
 alias la='ls -A'
 alias l='ls -lpah'
 alias loadvirtualenv='source /etc/bash_completion.d/virtualenvwrapper'
+# keep env variables when running sudo (eg for LUAPATH)
+alias sudo='sudo -E'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -173,17 +175,18 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 fi
 
 # pdh stuff below
-export PYTHONPATH=${PYTHONPATH}:~/lib/python
+# ~/lib/python is gone ...
+# export PYTHONPATH=${PYTHONPATH}:~/lib/python
 export GLE_USRLIB=~/lib/gle
 
-# using luarocks:
-export LUA_PATH='/home/pdh/.luarocks/share/lua/5.3/?.lua;/home/pdh/.luarocks/share/lua/5.3/?/init.lua;/usr/local/share/lua/5.3/?.lua;/usr/local/share/lua/5.3/?/init.lua;/usr/local/lib/lua/5.3/?.lua;/usr/local/lib/lua/5.3/?/init.lua;./?.lua;./?/init.lua'
-export LUA_CPATH='/home/pdh/.luarocks/lib/lua/5.3/?.so;/usr/local/lib/lua/5.3/?.so;/usr/local/lib/lua/5.3/loadall.so;./?.so'
+# using luarocks (put this also in /root/.bashrc)
+export LUA_PATH='/home/pdh/.luarocks/share/lua/5.3/?.lua;/home/pdh/.luarocks/share/lua/5.3/?/init.lua;/usr/local/share/lua/5.3/?.lua;/usr/local/share/lua/5.3/?/init.lua;/usr/local/lib/lua/5.3/?.lua;/usr/local/lib/lua/5.3/?/init.lua;./?.lua;./?/init.lua;/home/pdh/dev/lua/?.lua;/home/pdh/dev/lua/?/init.lua'
+export LUA_CPATH='/home/pdh/.luarocks/lib/lua/5.3/?.so;/usr/local/lib/lua/5.3/?.so;/usr/local/lib/lua/5.3/loadall.so;./?.so;/home/pdh/dev/lua/?.so'
 
 # add luarocks 'bin' as well.
 # - see also .profile which adds ~/bin to path as well
-export PATH=/home/pdh/.luarock/bin:$PATH
-
+# add .local/bin as that's where pip install --user puts scripts
+export PATH=/home/pdh/.luarocks/bin:/home/pdh/.local/bin:$PATH
 
 
 # For gnupg.vim plugin, see http://www.vim.org/scripts/script.php?script_id=3645
