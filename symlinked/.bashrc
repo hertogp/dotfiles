@@ -36,10 +36,10 @@ pw ()
     cd "${ACCTDIR}"
     if [ -z "${1}" ]; then
         echo ""
-        echo "usage: pw <topic>"
+        echo "usage: pw <Topic>"
         echo "  current topics:"
         for f in $(ls *.gpg); do
-            echo "   - ${f/.gpg/}"
+            echo "   - ${f%.gpg}"
         done
         echo ""
         echo "or start a new topic."
@@ -146,6 +146,7 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 #some more aliases
+alias ls.lua='source ~/bin/ls.lua.sh'
 alias ll='find . -type d'
 alias lt='ls -ltr'
 alias la='ls -A'
@@ -175,8 +176,9 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 fi
 
 # pdh stuff below
-# ~/lib/python is gone ...
-# export PYTHONPATH=${PYTHONPATH}:~/lib/python
+# ~/lib/python is back! ...
+export PYTHONPATH=${PYTHONPATH}:~/lib/python
+export PYTHONSTARTUP=${HOME}/.pythonstartup.py
 export GLE_USRLIB=~/lib/gle
 
 # using luarocks (put this also in /root/.bashrc)

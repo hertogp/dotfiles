@@ -282,7 +282,7 @@ set guicursor=
 " ----------------------------
 " - see also /usr/share/vim/vim7<x>/ftplugin/python.vim
 
-" - extend python path with a vim speficic pylib directory.
+" - extend python path with a vim specific pylib directory.
 " - use :scrip[tnames] to list all sourced script names (1st = 1st sourced)
 " - vim.eval("expand('<sfile>')")
 "    `-> also gives /home/<usr>/.vimrc (ie the symlink)
