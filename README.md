@@ -1,6 +1,6 @@
 ## linkify
 
-In the spiriti of https://github.com/Gee-Bee/dotfiles.git
+In the spirit of https://github.com/Gee-Bee/dotfiles.git
 
 ## new machine
 
