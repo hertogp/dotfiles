@@ -1,4 +1,4 @@
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/pdh/bin:/home/pdh/.cabal/bin"
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/pdh/bin:/home/pdh/go/bin:/usr/local/go/bin"
 
 # PYTHON
 # - for interactive python REPL shell

@@ -188,7 +188,7 @@ export LUA_CPATH='/home/pdh/.luarocks/lib/lua/5.3/?.so;/usr/local/lib/lua/5.3/?.
 # add luarocks 'bin' as well.
 # - see also .profile which adds ~/bin to path as well
 # add .local/bin as that's where pip install --user puts scripts
-export PATH=/home/pdh/.luarocks/bin:/home/pdh/.local/bin:$PATH
+export PATH=/home/pdh/.luarocks/bin:/home/pdh/.local/bin:$PATH:/usr/local/go/bin
 
 
 # For gnupg.vim plugin, see http://www.vim.org/scripts/script.php?script_id=3645
