@@ -182,9 +182,7 @@ export PYTHONSTARTUP=${HOME}/.pythonstartup.py
 export GLE_USRLIB=~/lib/gle
 
 # using luarocks (put this also in /root/.bashrc)
-LUA_V=5.4
-export
-LUA_PATH='/home/pdh/.luarocks/share/lua/5.4/?.lua;/home/pdh/.luarocks/share/lua/5.4/?/init.lua;/usr/local/share/lua/5.4/?.lua;/usr/local/share/lua/5.4/?/init.lua;/usr/local/lib/lua/5.4/?.lua;/usr/local/lib/lua/5.4/?/init.lua;./?.lua;./?/init.lua;/home/pdh/dev/lua/?.lua;/home/pdh/dev/lua/?/init.lua'
+export LUA_PATH='/home/pdh/.luarocks/share/lua/5.4/?.lua;/home/pdh/.luarocks/share/lua/5.4/?/init.lua;/usr/local/share/lua/5.4/?.lua;/usr/local/share/lua/5.4/?/init.lua;/usr/local/lib/lua/5.4/?.lua;/usr/local/lib/lua/5.4/?/init.lua;./?.lua;./?/init.lua;/home/pdh/dev/lua/?.lua;/home/pdh/dev/lua/?/init.lua'
 export LUA_CPATH='/home/pdh/.luarocks/lib/lua/5.4/?.so;/usr/local/lib/lua/5.4/?.so;/usr/local/lib/lua/5.4/loadall.so;./?.so;/home/pdh/dev/lua/?.so'
 
 # GO golang
