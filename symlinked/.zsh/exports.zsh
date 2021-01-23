@@ -1,4 +1,7 @@
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/pdh/bin:/home/pdh/go/bin:/usr/local/go/bin"
+# GO
+# Since GO1.13 nomore GOPATH, use modules
+export GOBIN=$HOME/go/bin
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$HOME/bin:/usr/local/go/bin:$GOBIN"
 
 # PYTHON
 # - for interactive python REPL shell

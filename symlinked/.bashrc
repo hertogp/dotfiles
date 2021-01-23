@@ -182,13 +182,20 @@ export PYTHONSTARTUP=${HOME}/.pythonstartup.py
 export GLE_USRLIB=~/lib/gle
 
 # using luarocks (put this also in /root/.bashrc)
-export LUA_PATH='/home/pdh/.luarocks/share/lua/5.3/?.lua;/home/pdh/.luarocks/share/lua/5.3/?/init.lua;/usr/local/share/lua/5.3/?.lua;/usr/local/share/lua/5.3/?/init.lua;/usr/local/lib/lua/5.3/?.lua;/usr/local/lib/lua/5.3/?/init.lua;./?.lua;./?/init.lua;/home/pdh/dev/lua/?.lua;/home/pdh/dev/lua/?/init.lua'
-export LUA_CPATH='/home/pdh/.luarocks/lib/lua/5.3/?.so;/usr/local/lib/lua/5.3/?.so;/usr/local/lib/lua/5.3/loadall.so;./?.so;/home/pdh/dev/lua/?.so'
+LUA_V=5.4
+export
+LUA_PATH='/home/pdh/.luarocks/share/lua/5.4/?.lua;/home/pdh/.luarocks/share/lua/5.4/?/init.lua;/usr/local/share/lua/5.4/?.lua;/usr/local/share/lua/5.4/?/init.lua;/usr/local/lib/lua/5.4/?.lua;/usr/local/lib/lua/5.4/?/init.lua;./?.lua;./?/init.lua;/home/pdh/dev/lua/?.lua;/home/pdh/dev/lua/?/init.lua'
+export LUA_CPATH='/home/pdh/.luarocks/lib/lua/5.4/?.so;/usr/local/lib/lua/5.4/?.so;/usr/local/lib/lua/5.4/loadall.so;./?.so;/home/pdh/dev/lua/?.so'
 
+# GO golang
+# - G1.13 doesn't need GOPATH anymore, use modules!
+# export GOPATH=$HOME/dev/go
+export GOBIN=$HOME/go/bin
 # add luarocks 'bin' as well.
 # - see also .profile which adds ~/bin to path as well
 # add .local/bin as that's where pip install --user puts scripts
-export PATH=/home/pdh/.luarocks/bin:/home/pdh/.local/bin:$PATH:/usr/local/go/bin
+# export PATH=/home/pdh/.luarocks/bin:/home/pdh/.local/bin:$PATH:/usr/local/go/bin:/home/pdh/go/bin
+export PATH=/snap/bin:/usr/local/go/bin:$GOBIN:$HOME/.luarocks/bin:$HOME/.local/bin:$PATH
 
 
 # For gnupg.vim plugin, see http://www.vim.org/scripts/script.php?script_id=3645
