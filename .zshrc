@@ -106,6 +106,8 @@ export MANPATH="/usr/local/man:$MANPATH"
 # [[ DOTFILES ]]
 # see https://www.atlassian.com/git/tutorials/dotfiles
 # see https://marcel.is/managing-dotfiles-with-git-bare-repo/
+# see https://github.com/hertogp/dotfiles
+# `-> cd ~/dev/ && git clone --bare git@github.com:hertogp/dotfiles.git
 # - DOTFILES points to a bare git repo that uses $HOME as working tree
 # - $HOME/.gitignore has $DOTFILES to ignore
 # - bare repo has status.showUntrackedFiles no
@@ -115,6 +117,7 @@ export MANPATH="/usr/local/man:$MANPATH"
 #   $ config commit
 #   $ config push
 #   $ config status
+#   $ config ls-tree -r HEAD  (to see tracked files)
 export DOTFILES="$HOME/dev/dotfiles"
 alias config='git --git-dir=$DOTFILES --work-tree=$HOME'
 
