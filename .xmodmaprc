@@ -1,0 +1,16 @@
+! pdh: ~/.xmodmaprc
+! see man xmodmap
+!
+! One of the more irritating differences between keyboards is  the  loca‐
+! tion  of  the Control and CapsLock keys.  A common use of xmodmap is to
+! swap to map caps lock to left control.
+!
+! map Caps_Lock to Control_L
+!
+! remove Lock = Caps_Lock
+! keycode 66 = Control_L Control_L Control_L
+!add Control = Control_L
+
+! '"~  : all require extra space to be typed. irksome!
+!keycode 48 = apostrophe
+
