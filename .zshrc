@@ -107,7 +107,8 @@ export MANPATH="/usr/local/man:$MANPATH"
 # see https://www.atlassian.com/git/tutorials/dotfiles
 # see https://marcel.is/managing-dotfiles-with-git-bare-repo/
 # see https://github.com/hertogp/dotfiles
-# `-> cd ~/dev/ && git clone --bare git@github.com:hertogp/dotfiles.git
+# `-> created via:
+#    $ cd ~/dev/ && git clone --bare git@github.com:hertogp/dotfiles.git
 # - DOTFILES points to a bare git repo that uses $HOME as working tree
 # - $HOME/.gitignore has $DOTFILES to ignore
 # - bare repo has status.showUntrackedFiles no
@@ -180,6 +181,35 @@ alias gb='git branch -a'
 alias gv='git log --pretty=format:'%s' | cut -d " " -f 1,2 | sort | uniq -c | sort -nr'
 alias git-reset='git fetch origin master && git reset --hard FETCH_HEAD && git clean -df'
 alias luamake=/home/pdh/.config/lsp/lua-language-server/3rd/luamake/luamake
+
+# [[ FUNCTIONS ]]
+export ACCTDIR=~/.acct
+pw ()
+{
+    PREVDIR=$(pwd)
+    cd "${HOME}/.acct"
+    if [ -z "${1}" ]; then
+        echo "need file, e.g. one of:"
+        echo  $(ls *.gpg)
+        echo ""
+        echo "or a new filename .."
+    else
+        nvim "${1}.gpg"
+    fi
+    cd ${PREVDIR}
+}
+
+export NOTESDIR=~/notes
+nn ()
+{
+    # nn [<topic>]
+    # nn <topic> --> new/existing note-file
+    # nn         --> start nvim w/ list of existing note-files
+    PREVDIR=$(pwd)
+    cd ${NOTESDIR}
+    nvim -c ":Telescope find_files"
+    cd ${PREVDIR}
+}
 
 # [[ SYNTAX ]]
 # sudo apt install zsh-syntax-highlighting
