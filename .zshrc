@@ -3,16 +3,13 @@
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-export STARSHIP_LOG='error'
 
-# [[ EXPORTS ]]
-
-# 2022-12-14
+# [[ XDG EXPORTS ]]
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 
-# pdh stuff below
-# ~/lib/python is back! ...
+# [[ PYLIB ]]
+# ~/lib/python is back.
 export PYTHONPATH=${PYTHONPATH}:~/lib/python
 export PYTHONSTARTUP=${HOME}/.pythonstartup.py
 export GLE_USRLIB=~/lib/gle
@@ -22,10 +19,9 @@ GPG_TTY=`tty`
 export GPG_TTY
 
 
-
-# ASDF
+# [[ ASDF ]]
 # - will ~/.asdf/bin and ~/.asdf/shims to PATH
-. $HOME/.asdf/asdf.sh was added to ~/.profile
+. $HOME/.asdf/asdf.sh
 . $HOME/.asdf/completions/asdf.bash
 # https://github.com/asdf-vm/asdf-erlang#ubuntu-2004-lts
 # https://github.com/asdf-vm/asdf-erlang#getting-erlang-documentation
@@ -33,23 +29,19 @@ export KERL_BUILD_DOCS=yes
 export KERL_INSTALL_HTMLDOCS=no
 export ASDF_LUA_LINUX_READLINE=1
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-#
 # [[ THEME ]]
-# ZSH_THEME="robbyrussell"
+# see https://ohmyz.sh/#install
+# `-> sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+# creates ~/.oh-my-zsh
+# see https://github.com/ohmyzsh/ohmyzsh/
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+# note: using starship instead.
 ZSH_THEME="bira"
 
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in $ZSH/themes/
-# If set to an empty array, this variable will have no effect.
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
+# [[ STARSHIP ]]
+# install/update via: curl -sS https://starship.rs/install.sh | sh
+# silence starship about command timeout (i.e. elixir)
+export STARSHIP_LOG='error'
 
 # Uncomment the following line to use hyphen-insensitive completion.
 # Case-sensitive completion must be off. _ and - will be interchangeable.
@@ -58,10 +50,10 @@ ZSH_THEME="bira"
 # Uncomment one of the following lines to change the auto-update behavior
 # zstyle ':omz:update' mode disabled  # disable automatic updates
 # zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
 # Uncomment the following line to change how often to auto-update (in days).
-# zstyle ':omz:update' frequency 13
+zstyle ':omz:update' frequency 16
 
 # Uncomment the following line if pasting URLs and other text is messed up.
 # DISABLE_MAGIC_FUNCTIONS="true"
@@ -106,12 +98,23 @@ plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 eval "$(starship init zsh)"
-# User configuration
+
+# [[ USER CONFIGURATION ]]
 
 export MANPATH="/usr/local/man:$MANPATH"
 
-
 # [[ DOTFILES ]]
+# see https://www.atlassian.com/git/tutorials/dotfiles
+# see https://marcel.is/managing-dotfiles-with-git-bare-repo/
+# - DOTFILES points to a bare git repo that uses $HOME as working tree
+# - $HOME/.gitignore has $DOTFILES to ignore
+# - bare repo has status.showUntrackedFiles no
+#   (git --git-dir=$DOTFILES --work-tree=$HOME config status.showUntrackedFiles no)
+# - manually add individual files:
+#   $ config add <a file in home dir>
+#   $ config commit
+#   $ config push
+#   $ config status
 export DOTFILES="$HOME/dev/dotfiles"
 alias config='git --git-dir=$DOTFILES --work-tree=$HOME'
 
@@ -150,8 +153,9 @@ alias cdn='cd /home/www/notes'
 alias cdr='cd /home/www/work'
 alias cdp='cd /home/dta/work/proj'
 alias cdv='cd ~/.vim'
-
+# keep env variables when running sudo (eg for LUAPATH)
 alias sudo='sudo -E'
+
 # [[ directory ]]
 alias ..='cd ..'
 alias 'bk=cd $OLDPWD'
@@ -175,4 +179,7 @@ alias git-reset='git fetch origin master && git reset --hard FETCH_HEAD && git c
 alias luamake=/home/pdh/.config/lsp/lua-language-server/3rd/luamake/luamake
 
 # [[ SYNTAX ]]
+# sudo apt install zsh-syntax-highlighting
+# see https://github.com/zsh-users/zsh-syntax-highlighting
+# this must be the last line in ~/.zshrc
 source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
