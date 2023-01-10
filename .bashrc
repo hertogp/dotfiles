@@ -217,7 +217,8 @@ export GPG_TTY
 
 # NVIM settings
 # - nvim sends Esc 2q and Esc 6q to which xcfe4-terminal just echo's
-export NVIM_TUI_ENABLE_CURSOR_SHAPE=0
+# Option no longer used in nvim
+# export NVIM_TUI_ENABLE_CURSOR_SHAPE=0
 
 # 2022-12-25 dircolors were removed
 # use solarized dircolors

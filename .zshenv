@@ -10,7 +10,7 @@
 
 # NVIM settings
 # - nvim sends Esc 2q and Esc 6q to which xcfe4-terminal just echo's
-export NVIM_TUI_ENABLE_CURSOR_SHAPE=0
+# export NVIM_TUI_ENABLE_CURSOR_SHAPE=0
 
 # load venv/bin/activate if available when starting new shell
 # - makes vim's help ('K') work when developing in a virtual environment
