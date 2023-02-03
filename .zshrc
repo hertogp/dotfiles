@@ -65,7 +65,11 @@ zstyle '*' single-ignored show
 # [[ ASDF ]]
 # this will add ~/.asdf/bin and ~/.asdf/shims to $PATH
 . $HOME/.asdf/asdf.sh
-. $HOME/.asdf/completions/asdf.bash
+# append completions to fpath
+# see https://asdf-vm.com/guide/getting-started.html#_3-install-asdf
+fpath=(${ASDF_DIR}/completions $fpath)
+# initialise completions with ZSH's compinit
+autoload -Uz compinit && compinit . $HOME/.asdf/completions/asdf.bash
 # https://github.com/asdf-vm/asdf-erlang#ubuntu-2004-lts
 # https://github.com/asdf-vm/asdf-erlang#getting-erlang-documentation
 export KERL_BUILD_DOCS=yes
